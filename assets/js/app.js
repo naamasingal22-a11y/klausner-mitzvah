@@ -88,11 +88,37 @@
     draw();
   };
 
+  // העברת התקדמות מהכתובת הישנה (Netlify): דף המעבר שם שולח אותה אחרי ה-#
+  // מוחקים אותה מיד משורת הכתובת, כדי שלא תישאר בהיסטוריה
+  function migrateFromOldSite() {
+    const h = location.hash;
+    if (h.indexOf('#/migrate/') !== 0) return false;
+    let data = null;
+    try { data = JSON.parse(decodeURIComponent(h.slice('#/migrate/'.length))); } catch (e) { data = null; }
+    history.replaceState(null, '', location.pathname + location.search + '#/');
+    if (!data || typeof data !== 'object' || !data.awards) return false;
+    const oldSeeds = Object.values(data.awards).reduce((s, a) => s + ((a && a.pts) || 0), 0);
+    const apply = () => { KZ.importState(data); KZ.updateChrome(); KZ.route(); KZ.toast(`ההתקדמות שלך הועברה מהאתר הישן ✓ (${oldSeeds} גרעינים)`); };
+    if (!S.onboarded && KZ.seeds() === 0) { apply(); return true; }
+    // יש התקדמות גם כאן – שואלים מה לשמור (אחרי שהעמוד הראשון נטען, כי הניתוב סוגר חלונות)
+    setTimeout(() => KZ.modal(`<h2>נמצאה התקדמות מהאתר הישן</h2>
+      <p>באתר הישן: <b>${oldSeeds}</b> גרעינים. כאן: <b>${KZ.seeds()}</b> גרעינים. איזו התקדמות לשמור?</p>
+      <div class="btn-row"><button class="btn" data-keep="old">מהאתר הישן (${oldSeeds})</button><button class="btn btn--ghost" data-keep="new">מה שיש כאן (${KZ.seeds()})</button></div>`, {
+      onMount(m) {
+        KZ.$('[data-keep="old"]', m).addEventListener('click', () => { KZ.closeModal(); apply(); });
+        KZ.$('[data-keep="new"]', m).addEventListener('click', () => KZ.closeModal());
+      },
+    }), 400);
+    return true;
+  }
+
   function boot() {
     KZ.renderNav();
     KZ.updateChrome();
+    const migrated = migrateFromOldSite();
     window.addEventListener('hashchange', KZ.route);
     KZ.route();
+    if (migrated) return;
     if (!S.onboarded) setTimeout(() => KZ.openProfile(true), 350);
     else KZ.checkBadges();
   }
