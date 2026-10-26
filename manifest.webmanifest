@@ -1,0 +1,13 @@
+{
+  "name": "המסע לבר/בת מצווה · מניין קלוזנר",
+  "short_name": "המסע שלי",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#F6F0E4",
+  "theme_color": "#C42F45",
+  "icons": [
+    { "src": "assets/img/rimon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

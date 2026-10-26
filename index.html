@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>המסע לבר/בת מצווה · קהילת קלוזנר</title>
+  <meta name="description" content="אתר מלווה לשנת הבר/בת מצווה בקהילת קלוזנר: מסע השנה, אתגרים, משחקים, טעמי המקרא, הסידור והפרשה שלי.">
+  <meta name="theme-color" content="#29A8E0">
+  <meta name="color-scheme" content="only light">
+  <link rel="icon" href="assets/img/rimon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@700;900&family=Gveret+Levin&family=Noto+Serif+Hebrew:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">דילוג לתוכן</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#/" aria-label="קהילת קלוזנר – המסע לבר/בת מצווה, לדף הבית">
+        <span class="logo" aria-hidden="true"><small>קהילת</small><b>קלוזנר</b></span>
+        <span class="brand__text">
+          <strong>המסע לבר/בת מצווה</strong>
+          <small>השנה שלי · תשפ״ז</small>
+        </span>
+      </a>
+      <nav class="topnav" id="topnav" aria-label="ניווט ראשי"></nav>
+      <div class="topbar__me">
+        <a class="seed-pill" href="#/me" id="seedPill" aria-label="הגרעינים שלי"></a>
+        <a class="avatar-btn" href="#/me" id="avatarBtn" aria-label="האזור האישי"></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-brand">
+        <span class="logo" aria-hidden="true"><small>קהילת</small><b>קלוזנר</b><i>KEHILLAT KLAUSNER</i></span>
+        <span class="tagline">מניין שוויוני הלכתי<br>תלפיות ארנונה</span>
+      </div>
+      <p>נבנה ללוות את שנת הבר/בת מצווה בקהילה, על פי התכנית שבנו ההורים (פגישת ההורים, 17.10.2026).</p>
+      <p><a href="#/parents">לאזור ההורים</a> · <a href="#/me">האזור האישי</a> · <a href="#/library">ארון הספרים</a></p>
+      <p class="muted small">ההתקדמות נשמרת רק במכשיר הזה. כדאי לגבות מדי פעם מהאזור האישי.</p>
+    </div>
+  </footer>
+
+  <nav class="tabbar" id="tabbar" aria-label="ניווט ראשי"></nav>
+
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <!-- מרקם "דיו" לחותמות -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/></filter>
+  </svg>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/hebrew.js"></script>
+  <script src="assets/js/data/program.js"></script>
+  <script src="assets/js/data/quests.js"></script>
+  <script src="assets/js/data/taamim.js"></script>
+  <script src="assets/js/data/course.js"></script>
+  <script src="assets/js/data/siddur.js"></script>
+  <script src="assets/js/views/home.js"></script>
+  <script src="assets/js/views/journey.js"></script>
+  <script src="assets/js/views/quests.js"></script>
+  <script src="assets/js/views/library.js"></script>
+  <script src="assets/js/views/taamim.js"></script>
+  <script src="assets/js/views/parasha.js"></script>
+  <script src="assets/js/views/games.js"></script>
+  <script src="assets/js/views/practice.js"></script>
+  <script src="assets/js/views/course.js"></script>
+  <script src="assets/js/views/me.js"></script>
+  <script src="assets/js/views/parents.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
