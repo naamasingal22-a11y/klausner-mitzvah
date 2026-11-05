@@ -63,48 +63,194 @@
   };
 
   /* ---------- הסידור ---------- */
-  let serviceId = 'shabbat';
+  // שני מצבים: "צעד אחר צעד" – חלק אחד בכל מסך ושאלה קצרה אחריו (ברירת מחדל),
+  // ו"כל המפה" – הכול ברשימה, למי שרוצה לעיין
+  let siddurTab = 'shabbat';
+  let siddurMode = 'tour';
+  const EXTRA_TABS = [{ id: 'body', name: 'תפילה בגוף', emoji: '🧍' }, { id: 'resp', name: 'מה עונים', emoji: '🗣️' }];
+  const siddurTabs = () => [...KZ.siddur.services.map((s) => ({ id: s.id, name: s.name, emoji: s.emoji })), ...EXTRA_TABS];
+  KZ.siddurTabIds = () => siddurTabs().map((t) => t.id);
+  const tourOf = (tab) => { S.siddurTour = S.siddurTour || {}; S.siddurTour[tab] = S.siddurTour[tab] || { i: 0, res: {} }; return S.siddurTour[tab]; };
+
+  function partBody(p) {
+    return `${p.highlight ? `<div class="highlight"><b>⭐ הרגע לתפוס:</b> ${esc(p.highlight)}</div>` : ''}
+      ${p.say ? `<div class="small muted">עונים:</div><div class="say">${esc(p.say)}</div>` : ''}
+      ${p.words ? `<div class="small muted">אומרים:</div><div class="words">${p.words.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span><span class="words__text">${esc(w.text)}</span></div>`).join('')}</div>` : ''}
+      ${p.practice && p.practice.length ? `<div class="small muted" style="margin-bottom:4px">מה עושים:</div><ul class="practice">${p.practice.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      ${p.link ? `<p style="margin-top:10px"><a class="btn btn--sm btn--ghost" href="${p.link.href}">${esc(p.link.label)}</a></p>` : ''}`;
+  }
+  const bodyCard = (b) => `<div class="card card--flat body-item"><span class="e">${b.e}</span><div><strong>${esc(b.title)}</strong><div class="muted small">${esc(b.text)}</div></div></div>`;
+  const respCard = (r) => `<div class="card card--flat"><strong>${esc(r.when)}</strong><div class="say">${esc(r.say)}</div><div class="small muted">${esc(r.note)}</div></div>`;
+
+  // השלבים של כל לשונית
+  function tourSteps(tab) {
+    const sv = KZ.siddur.services.find((s) => s.id === tab);
+    if (sv) return sv.parts.map((p) => ({ kind: 'part', p, check: (KZ.siddurChecks[tab] || {})[p.name] }));
+    if (tab === 'body') return KZ.siddur.body.map((b) => ({ kind: 'body', b }));
+    return KZ.siddur.responses.map((r) => ({ kind: 'resp', r }));
+  }
+  // שתי תשובות שגויות מתוך שאר הפריטים
+  const others = (list, item, n = 2) => KZ.sample(list.filter((x) => x !== item), n);
+
+  function mapHTML(tab) {
+    const sv = KZ.siddur.services.find((s) => s.id === tab);
+    if (tab === 'body') return `<div class="body-grid">${KZ.siddur.body.map(bodyCard).join('')}</div>`;
+    if (tab === 'resp') return `<div class="grid-2">${KZ.siddur.responses.map(respCard).join('')}</div>`;
+    return `
+      <div class="map-legend">
+        <strong>איך קוראים את המפה?</strong>
+        <div class="map-legend__row"><span class="highlight map-legend__tag"><b>⭐ הרגע לתפוס</b></span><span>הרגע הכי חזק או מעניין בחלק הזה של התפילה – משפט, רעיון או מנגינה. גם אם קשה להתרכז בכל התפילה, שווה "לתפוס" לפחות את הרגע הזה: לשים לב אליו, לומר אותו לאט, לשיר אותו עם כולם.</span></div>
+        <div class="map-legend__row"><span class="say map-legend__tag">עונים / אומרים</span><span>המילים עצמן: מה הקהל עונה יחד בקול (מסומן בתכלת), ומה אומרים בפתיחה ובסיום.</span></div>
+        <div class="map-legend__row"><span class="map-legend__tag map-legend__tag--do">מה עושים</span><span>מה עושים בגוף ובמעשה: עומדים, כורעים, מכסים עיניים, מנשקים.</span></div>
+      </div>
+      <p class="muted">${esc(sv.intro)}</p>
+      <div class="timeline">${sv.parts.map((p, i) => `
+        <div class="tl-item" data-n="${i + 1}"><details ${i === 0 ? 'open' : ''}>
+          <summary><div><h3>${esc(p.name)}</h3><p>${esc(p.what)}</p></div><span class="chev">${icon('chevL')}</span></summary>
+          <div class="tl-body">${partBody(p)}</div></details></div>`).join('')}
+      </div>`;
+  }
+
   KZ.libSections.siddur = {
     render() {
-      const sv = KZ.siddur.services.find((s) => s.id === serviceId) || KZ.siddur.services[0];
+      const tabs = siddurTabs();
+      if (!tabs.some((t) => t.id === siddurTab)) siddurTab = tabs[0].id;
       return `${crumbs('מפת הסידור')}
         <header class="page-head"><h1>מפת הסידור</h1>
-          <p>לא היסטוריה – היילייטס ופרקטיקה: מה קורה בכל חלק, איזה רגע שווה לתפוס, ומה עושים. ${KZ.g('לחץ', 'לחצי', 'לחצו')} על כל חלק כדי לפתוח.</p></header>
-        <div class="seg service-tabs" role="tablist">${KZ.siddur.services.map((s) => `<button type="button" aria-pressed="${s.id === sv.id}" data-act="siddur-tab" data-id="${s.id}">${s.emoji} ${esc(s.name)}</button>`).join('')}</div>
-        <div class="map-legend">
-          <strong>איך קוראים את המפה?</strong>
-          <div class="map-legend__row"><span class="highlight map-legend__tag"><b>⭐ הרגע לתפוס</b></span><span>הרגע הכי חזק או מעניין בחלק הזה של התפילה – משפט, רעיון או מנגינה. גם אם קשה להתרכז בכל התפילה, שווה "לתפוס" לפחות את הרגע הזה: לשים לב אליו, לומר אותו לאט, לשיר אותו עם כולם.</span></div>
-          <div class="map-legend__row"><span class="say map-legend__tag">עונים / אומרים</span><span>המילים עצמן: מה הקהל עונה יחד בקול (מסומן בתכלת), ומה אומרים בפתיחה ובסיום.</span></div>
-          <div class="map-legend__row"><span class="map-legend__tag map-legend__tag--do">מה עושים</span><span>מה עושים בגוף ובמעשה: עומדים, כורעים, מכסים עיניים, מנשקים.</span></div>
+          <p>${siddurMode === 'tour' ? 'מה קורה בכל חלק של התפילה, ומה עושים. חלק אחד בכל פעם – ושאלה קצרה אחרי כל חלק.' : 'כל החלקים ברשימה אחת. ' + KZ.g('לחץ', 'לחצי', 'לחצו') + ' על חלק כדי לפתוח.'}</p></header>
+        <div class="seg siddur-mode" role="group" aria-label="אופן התצוגה" style="margin-bottom:10px">
+          <button type="button" data-act="siddur-mode" data-m="tour" aria-pressed="${siddurMode === 'tour'}">🚶 צעד אחר צעד</button>
+          <button type="button" data-act="siddur-mode" data-m="map" aria-pressed="${siddurMode === 'map'}">🗺️ כל המפה</button>
         </div>
-        <p class="muted">${esc(sv.intro)}</p>
-        <div class="timeline">${sv.parts.map((p, i) => `
-          <div class="tl-item" data-n="${i + 1}"><details ${i === 0 ? 'open' : ''}>
-            <summary><div><h3>${esc(p.name)}</h3><p>${esc(p.what)}</p></div><span class="chev">${icon('chevL')}</span></summary>
-            <div class="tl-body">
-              ${p.highlight ? `<div class="highlight"><b>⭐ הרגע לתפוס:</b> ${esc(p.highlight)}</div>` : ''}
-              ${p.say ? `<div class="small muted">עונים:</div><div class="say">${esc(p.say)}</div>` : ''}
-              ${p.words ? `<div class="small muted">אומרים:</div><div class="words">${p.words.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span><span class="words__text">${esc(w.text)}</span></div>`).join('')}</div>` : ''}
-              ${p.practice && p.practice.length ? `<div class="small muted" style="margin-bottom:4px">מה עושים:</div><ul class="practice">${p.practice.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-              ${p.link ? `<p style="margin-top:10px"><a class="btn btn--sm btn--ghost" href="${p.link.href}">${esc(p.link.label)}</a></p>` : ''}
-            </div></details></div>`).join('')}
-        </div>
-        <section class="section">
-          <div class="section-head"><h2>תפילה בגוף</h2></div>
-          <div class="body-grid">${KZ.siddur.body.map((b) => `<div class="card card--flat body-item"><span class="e">${b.e}</span><div><strong>${esc(b.title)}</strong><div class="muted small">${esc(b.text)}</div></div></div>`).join('')}</div>
-        </section>
-        <section class="section">
-          <div class="section-head"><h2>מה עונים?</h2></div>
-          <div class="grid-2">${KZ.siddur.responses.map((r) => `<div class="card card--flat"><strong>${esc(r.when)}</strong><div class="say">${esc(r.say)}</div><div class="small muted">${esc(r.note)}</div></div>`).join('')}</div>
-        </section>
+        <div class="seg service-tabs" role="tablist">${tabs.map((t) => `<button type="button" aria-pressed="${t.id === siddurTab}" data-act="siddur-tab" data-id="${t.id}">${t.emoji} ${esc(t.name)}${S.siddurTour && S.siddurTour[t.id] && S.siddurTour[t.id].done ? ' ✓' : ''}</button>`).join('')}</div>
+        ${siddurMode === 'tour' ? '<div id="tour"></div>' : mapHTML(siddurTab)}
         <section class="section card weekly">
-          <h3>🧩 בואו נבדוק: מה בא קודם?</h3>
+          <h3>🧩 עוד בדיקה: מה בא קודם?</h3>
           <p class="muted">במשחק "סדר בתפילה" מסדרים את חלקי התפילה – ומקבלים גרעינים.</p>
           <a class="btn btn--teal" href="#/games/order">למשחק</a>
         </section>`;
     },
+    mount(root) {
+      if (siddurMode !== 'tour') return;
+      const box = KZ.$('#tour', root);
+      const tab = siddurTab;
+      const tabs = siddurTabs();
+      const tabMeta = tabs.find((t) => t.id === tab);
+      const steps = tourSteps(tab);
+      const st = tourOf(tab);
+      if (st.i > steps.length) st.i = 0;
+
+      function dots() {
+        return `<div class="c-dots tour-dots" aria-hidden="true">${steps.map((_, k) => `<i class="${k === st.i ? 'on' : st.res[k] === true ? 'past' : st.res[k] === false ? 'miss' : ''}"></i>`).join('')}</div>`;
+      }
+      function nav(canNext) {
+        return `<div class="c-nav">
+          ${st.i > 0 ? '<button type="button" class="btn btn--ghost" data-tour="prev">→ הקודם</button>' : '<span></span>'}
+          <button type="button" class="btn ${st.i === steps.length - 1 ? 'btn--marker' : ''}" data-tour="next" ${canNext ? '' : 'disabled title="קודם עונים על השאלה"'}>${st.i === steps.length - 1 ? 'סיום ✓' : 'הבא ←'}</button>
+        </div>`;
+      }
+      // שאלה: מסמנים תשובה, מציגים הסבר, ופותחים את "הבא"
+      function bindQuestion(correctKey, explainHTML, onAfter) {
+        let answered = false;
+        KZ.$$('.opt', box).forEach((b) => b.addEventListener('click', () => {
+          if (answered) return; answered = true;
+          const ok = b.dataset.k === correctKey;
+          b.classList.add(ok ? 'right' : 'wrong');
+          if (!ok) KZ.$(`.opt[data-k="${CSS.escape(correctKey)}"]`, box).classList.add('right');
+          const first = st.res[st.i] === undefined;
+          if (first) st.res[st.i] = ok;
+          KZ.save();
+          if (ok && first) KZ.award(`siddur:${tab}:${st.i}`, 2, `מפת הסידור: ${tabMeta.name}`, { silent: true });
+          const fb = KZ.$('#tourFb', box);
+          fb.classList.add(ok ? 'fb-box--ok' : 'fb-box--fix');
+          fb.innerHTML = `${ok ? `✓ נכון!${first ? ' <span class="tag tag--seed">+2</span>' : ''} ` : 'כמעט! '}${explainHTML}`;
+          if (onAfter) onAfter(ok);
+          KZ.$('[data-tour="next"]', box).disabled = false;
+          KZ.$('[data-tour="next"]', box).removeAttribute('title');
+        }));
+      }
+      const optsHTML = (opts, cls = '') => `<div class="options">${opts.map((o) => `<button type="button" class="opt ${cls}" data-k="${esc(o.k)}">${o.html}</button>`).join('')}</div>`;
+
+      function draw() {
+        st.i = Math.max(0, Math.min(st.i, steps.length));
+        KZ.save();
+        if (st.i === steps.length) return summary();
+        const s = steps[st.i];
+        const head = `<div class="tour-head"><span class="overline">${tabMeta.emoji} ${esc(tabMeta.name)} · ${st.i + 1} מתוך ${steps.length}</span>${dots()}</div>`;
+        if (s.kind === 'part') {
+          const p = s.p, c = s.check;
+          box.innerHTML = `${head}
+            <div class="card tour-card">
+              <h2 class="c-title">${esc(p.name)}</h2>
+              <p class="tour-what">${esc(p.what)}</p>
+              ${partBody(p)}
+              ${c ? `<div class="c-task tour-check"><span class="sticker" style="--r:-3deg;font-size:1.05rem">בדיקה קטנה ✓</span>
+                <p class="c-prompt">${esc(c.q)}</p>
+                ${optsHTML(KZ.shuffle(c.o.map((o, k) => ({ k: String(k), html: esc(o) }))))}
+                <div class="fb-box" id="tourFb"></div></div>` : ''}
+            </div>${nav(!c)}`;
+          if (c) bindQuestion(String(c.a), esc(c.e || ''));
+        } else if (s.kind === 'body') {
+          // קודם מנחשים, ואז רואים את ההסבר
+          const b = s.b, prompt = (KZ.siddurBodyPrompts || {})[b.title] || b.text;
+          const opts = KZ.shuffle([b, ...others(KZ.siddur.body, b)]).map((x) => ({ k: x.title, html: `${x.e} ${esc(x.title)}` }));
+          box.innerHTML = `${head}
+            <div class="card tour-card">
+              <p class="tour-what">${esc(prompt)} –</p>
+              <h2 class="c-title">מה עושים?</h2>
+              ${optsHTML(opts)}
+              <div class="fb-box" id="tourFb"></div>
+              <div id="tourReveal"></div>
+            </div>${nav(false)}`;
+          bindQuestion(b.title, '', () => { KZ.$('#tourReveal', box).innerHTML = bodyCard(b); });
+        } else {
+          const r = s.r;
+          const opts = KZ.shuffle([r, ...others(KZ.siddur.responses, r)]).map((x) => ({ k: x.when, html: `<span class="text">${esc(x.say)}</span>` }));
+          box.innerHTML = `${head}
+            <div class="card tour-card">
+              <p class="tour-what">${esc(r.when)} –</p>
+              <h2 class="c-title">מה עונים?</h2>
+              ${optsHTML(opts, 'opt--say')}
+              <div class="fb-box" id="tourFb"></div>
+              <div id="tourReveal"></div>
+            </div>${nav(false)}`;
+          bindQuestion(r.when, '', () => { KZ.$('#tourReveal', box).innerHTML = respCard(r); });
+        }
+      }
+      function summary() {
+        const total = steps.filter((s) => s.kind !== 'part' || s.check).length;
+        const right = Object.values(st.res).filter(Boolean).length;
+        if (!st.done) {
+          st.done = Date.now(); KZ.save(); KZ.confetti(70);
+          const tb = KZ.$(`[data-act="siddur-tab"][data-id="${tab}"]`, root);
+          if (tb && !tb.textContent.includes('✓')) tb.textContent += ' ✓';
+        }
+        KZ.award(`siddur-done:${tab}`, 10, `סיימת: ${tabMeta.name}`);
+        const idx = tabs.findIndex((t) => t.id === tab);
+        const next = tabs.slice(idx + 1).concat(tabs.slice(0, idx)).find((t) => !(S.siddurTour && S.siddurTour[t.id] && S.siddurTour[t.id].done));
+        box.innerHTML = `<div class="card tour-card center">
+            <div class="notice-big__icon" style="font-size:44px;width:84px;height:84px">${tabMeta.emoji}</div>
+            <h2 style="padding:0">${KZ.g('סיימת', 'סיימת', 'סיימתם')}: ${esc(tabMeta.name)}!</h2>
+            <p class="muted">${right} מתוך ${total} תשובות נכונות בפעם הראשונה.</p>
+            <div class="btn-row" style="justify-content:center">
+              ${next ? `<button type="button" class="btn btn--marker" data-act="siddur-tab" data-id="${next.id}">${next.emoji} ל${esc(next.name)} ←</button>` : '<span class="sticker" style="--r:-3deg">📖 עברת על כל המפה!</span>'}
+              <button type="button" class="btn btn--ghost" data-tour="restart">מההתחלה</button>
+            </div>
+          </div>`;
+      }
+      box.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-tour]'); if (!b || b.disabled) return;
+        if (b.dataset.tour === 'prev') st.i--;
+        else if (b.dataset.tour === 'next') st.i++;
+        else if (b.dataset.tour === 'restart') st.i = 0;
+        draw();
+        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      draw();
+    },
   };
-  KZ.actions['siddur-tab'] = (el) => { serviceId = el.dataset.id; KZ.refresh(); };
+  KZ.actions['siddur-tab'] = (el) => { siddurTab = el.dataset.id; KZ.refresh(); };
+  KZ.actions['siddur-mode'] = (el) => { siddurMode = el.dataset.m; KZ.refresh(); };
 
   /* ---------- העלייה לתורה ---------- */
   KZ.libSections.aliyah = {

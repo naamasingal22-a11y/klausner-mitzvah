@@ -678,6 +678,22 @@ main { display: block; outline: none; min-height: 60vh; }
 .c-find { text-align: start; background: var(--card); border-radius: 12px; padding: 6px 10px; }
 .g-inline { font-family: var(--font-text); font-size: 1.4rem; line-height: 1; vertical-align: -.2em; }
 
+/* מפת הסידור – צעד אחר צעד */
+.tour-head { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 14px 0 10px; }
+.tour-head .overline { margin: 0; }
+.tour-dots { margin: 0; gap: 4px; }
+.tour-dots i { width: 16px; height: 7px; }
+.c-dots i.miss { background: var(--pom-2); }
+.tour-card { margin-bottom: 4px; }
+.tour-what { font-size: 1.1rem; line-height: 1.6; margin-bottom: 12px; }
+.tour-check { margin-top: 18px; }
+.opt--say { font-family: var(--font-text); font-size: 1.15rem; font-weight: 600; line-height: 1.5; }
+.tour-card #tourReveal:not(:empty) { margin-top: 12px; }
+@media (max-width: 640px) {
+  .tour-card .options { grid-template-columns: 1fr; }
+  .tour-what { font-size: 1.02rem; }
+}
+
 /* תרגול מהפרשה שלי */
 .practice-promo { position: relative; }
 .practice-promo .sticker { position: absolute; top: -12px; inset-inline-start: 16px; }
