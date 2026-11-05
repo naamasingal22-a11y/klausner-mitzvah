@@ -34,7 +34,7 @@
         <header class="page-head">
           <span class="overline">מאגרי מידע</span>
           <h1>ארון הספרים</h1>
-          <p>כל מה שצריך כדי להרגיש בבית בבית הכנסת: טעמים, תפילה, עלייה לתורה ודבר תורה. ביקור ראשון בכל מדף = 5 גרעינים.</p>
+          <p>כל מה שצריך כדי להרגיש בבית בבית הכנסת: טעמים, תפילה, עלייה לתורה ודבר תורה.</p>
         </header>
         <div class="grid-2">${SECTIONS.map((s) => `
           <a class="card card--link lib-card" href="#/library/${s.id}">
@@ -119,8 +119,14 @@
             <div class="card"><h2>הברכה הראשונה</h2>
               <div class="blessing">${A.before.map((b) => b.who === 'קהל' ? `<span class="resp">${esc(b.text)}</span>` : `<span>${esc(b.text)}</span> `).join('')}</div></div>
             <div class="card"><h2>הברכה האחרונה</h2><div class="blessing">${esc(A.after)}</div></div>
-            <div class="card"><h3>ולמפטיר/ה – הברכה שלפני ההפטרה</h3><div class="blessing" style="font-size:1.2rem">${esc(A.haftarahBefore)}</div>
-              <p class="small muted" style="margin-top:8px">הברכות שאחרי ההפטרה ארוכות יותר – הן מופיעות בחומש ובסידור.</p></div>
+            <div class="card"><h3>ולמי שעולה למפטיר: ברכות ההפטרה</h3>
+              <p class="small muted" style="margin:0 0 8px">בעלייה למפטיר קוראים גם את ההפטרה, ומברכים לפניה ואחריה.</p>
+              <h4 style="margin:0 0 6px">הברכה שלפני ההפטרה</h4>
+              <div class="blessing" style="font-size:1.2rem">${esc(A.haftarahBefore)}</div>
+              <details class="haft-after"><summary>הברכות שאחרי ההפטרה (${A.haftarahAfter.length} ברכות) ›</summary>
+                ${A.haftarahAfter.map((b, i) => `<h4>${i + 1}. ${esc(b.t)}</h4><div class="blessing" style="font-size:1.2rem">${esc(b.text)}</div>`).join('')}
+                <p class="small muted" style="margin-top:8px">בשבת שהיא גם חג או חול המועד, הנוסח של הברכה האחרונה משתנה. בודקים בסידור.</p>
+              </details></div>
           </div>
         </div>
         <section class="section"><div class="section-head"><h2>מי עושה מה ליד הבימה?</h2></div>

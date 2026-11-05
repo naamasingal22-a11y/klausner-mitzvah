@@ -155,7 +155,7 @@ KZ.quests = [
     { id: 'maestro', icon: '🎼', name: 'מאסטרו של טעמים', desc: '10 מתוך 10 ברמה המתקדמת.', hint: '10/10 בטעם־מטרה מתקדם', test: (S) => best(S, 'taam-adv') >= 10 },
     { id: 'order', icon: '🧩', name: 'יודעים סדר', desc: 'סידרת תפילה שלמה בלי טעות.', hint: 'ניקוד מלא בסדר בתפילה', test: (S) => !!(S.games.order && S.games.order.perfect) },
     { id: 'chain', icon: '⛓️', name: 'שרשרת זהב', desc: 'כל משפחות הטעמים בסדר הנכון.', hint: 'ניקוד מלא בשרשרת טעמים', test: (S) => !!(S.games.chain && S.games.chain.perfect) },
-    { id: 'speed', icon: '⚡', name: 'ברק', desc: '15 תשובות נכונות במפסיק־או־משרת.', hint: '15 ומעלה במפסיק או משרת', test: (S) => best(S, 'speed') >= 15 },
+    { id: 'speed', icon: '⚡', name: 'ברק', desc: '15 נקודות במפסיק־או־משרת (טעות מורידה נקודה).', hint: '15 נקודות ומעלה במפסיק או משרת', test: (S) => best(S, 'speed') >= 15 },
     { id: 'words', icon: '🔤', name: 'מילון מהלך', desc: '9 ומעלה בחידון המושגים.', hint: '9/10 בחידון המושגים', test: (S) => best(S, 'words') >= 9 },
     { id: 'capsule', icon: '⏳', name: 'קפסולת זמן', desc: 'חתמת מכתב לעצמך.', hint: 'חתמו מכתב בקפסולת הזמן', test: (S) => !!S.capsule.sealedAt },
     { id: 'journal', icon: '✍️', name: 'כותבים את המסע', desc: 'חמש רשומות ביומן.', hint: 'כתבו 5 רשומות ביומן', test: (S) => S.journal.length >= 5 },

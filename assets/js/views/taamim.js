@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="verse-card"><div class="reader ${st.colors && st.mode !== 'scroll' ? 'colors' : ''} ${st.mode === 'scroll' ? 'scroll' : ''}" style="--fs:${S.settings.fs || 1}">${versesHTML(verses, st)}</div></div>
-        ${st.mode === 'scroll' ? '<p class="small muted" style="margin-top:10px">ככה זה נראה בספר התורה: בלי ניקוד, בלי טעמים ובלי סימני פסוק. הבעל/ת קורא/ת זוכר/ת הכול בעל פה!</p>' : legendHTML(verses, st)}
+        ${st.mode === 'scroll' ? '<p class="small muted" style="margin-top:10px">ככה זה נראה בספר התורה: בלי ניקוד, בלי טעמים ובלי סימני פסוק. את כל השאר לומדים מראש וזוכרים בעל פה!</p>' : legendHTML(verses, st)}
         ${st.mode !== 'scroll' ? `<p class="small faint" style="margin-top:8px">${KZ.g('לחץ', 'לחצי', 'לחצו')} על מילה כדי לראות את הטעם שלה.</p>` : ''}`;
     }
     function closePop() { const p = KZ.$('.taam-pop', el); if (p) p.remove(); KZ.$$('.w.sel', el).forEach((w) => w.classList.remove('sel')); }
@@ -142,7 +142,7 @@
 
         <section class="section">
           <div class="section-head"><h2>משפחות טעמים</h2><a class="small" href="#/games/chain">⛓️ למשחק השרשרת</a></div>
-          <p class="muted">הטעמים באים בקבוצות קבועות: משרתים שמובילים אל מפסיק. מי שמכיר את המשפחות – כבר יודע/ת חצי מהמנגינה.</p>
+          <p class="muted">הטעמים באים בקבוצות קבועות: משרתים שמובילים אל מפסיק. כשמכירים את המשפחות, כבר יודעים חצי מהמנגינה.</p>
           <div class="grid-2">${KZ.taamGroups.map((g) => `
             <div class="card group-card">
               <h3>${esc(g.name)}</h3>

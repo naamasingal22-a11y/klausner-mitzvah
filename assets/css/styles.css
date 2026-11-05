@@ -414,6 +414,9 @@ main { display: block; outline: none; min-height: 60vh; }
 .p-social { background: var(--teal-soft); color: var(--teal-deep); }
 .p-community { background: var(--pom-soft); color: var(--pom-deep); }
 .p-knowledge { background: var(--sky-soft); color: var(--sky-ink); }
+.next-step { background: var(--sky-soft); border: 2px solid var(--edge); box-shadow: 4px 4px 0 var(--edge); }
+.next-step h3 { margin: 4px 0 6px; }
+.next-step p { margin: 0 0 12px; }
 .weekly { position: relative; overflow: hidden; background: var(--marker-soft); border-color: var(--edge); }
 .weekly::before { content: "★"; position: absolute; inset-inline-end: 14px; top: 2px; font-size: 90px; line-height: 1; color: var(--marker); transform: rotate(14deg); }
 .weekly > * { position: relative; }
@@ -596,6 +599,9 @@ main { display: block; outline: none; min-height: 60vh; }
 .body-item { display: flex; gap: 12px; align-items: flex-start; }
 .body-item .e { font-size: 26px; width: 46px; height: 46px; border-radius: 12px; background: var(--marker-soft); display: grid; place-items: center; flex: none; border: 1.5px solid var(--line-2); }
 .blessing { font-family: var(--font-text); font-size: 1.45rem; line-height: 1.9; background: var(--card-2); border: 1.5px solid var(--line-2); border-radius: 14px; padding: 14px 18px; }
+.haft-after { margin-top: 12px; }
+.haft-after summary { cursor: pointer; font-weight: 700; color: var(--sky-deep); padding: 8px 0; }
+.haft-after h4 { margin: 12px 0 6px; }
 .blessing .resp { display: block; color: var(--sky-deep); font-size: .95em; }
 .blessing .resp::before { content: "הקהל: "; font-family: var(--font); font-size: .6em; font-weight: 700; }
 .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }

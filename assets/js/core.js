@@ -173,7 +173,8 @@ window.KZ = window.KZ || {};
     save();
   }
   function markVisited(key, label) {
-    if (!S.visited[key]) { S.visited[key] = Date.now(); save(); award('visit:' + key, 5, `ביקור ראשון: ${label}`); }
+    // רק מסמנים שהיה ביקור (לנקודה ב"ארון הספרים" ולתג "מפתחות הארון"). גרעינים מקבלים על למידה, לא על כניסה לדף
+    if (!S.visited[key]) { S.visited[key] = Date.now(); save(); afterGain(levelFor(seeds()).idx); }
   }
 
   /* ---------- רכיבי ממשק ---------- */

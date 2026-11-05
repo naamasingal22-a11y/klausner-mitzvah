@@ -16,7 +16,7 @@
   const ORDER = ['maftir', 'haftarah', '1', '2', '3', '4', '5', '6', '7'];
   const MODES = [
     { id: 'taam', emoji: '🎯', name: 'זהו את הטעם', desc: 'מילה מסומנת מתוך הפסוקים שלכם – איזה טעם יש עליה?' },
-    { id: 'stop', emoji: '⏸️', name: 'איפה עוצרים?', desc: 'הפסוק בלי טעמים, כמו בתיקון. מצאו את האתנחתא – העצירה באמצע.' },
+    { id: 'stop', emoji: '⏸️', name: 'איפה עוצרים?', desc: 'הפסוק עם ניקוד ובלי טעמים. מצאו את האתנחתא – העצירה באמצע.' },
     { id: 'track', emoji: '📖', name: 'מעקב קריאה', desc: 'פסוק אחרי פסוק: קודם עם טעמים, ואז כמו בספר תורה.' },
   ];
   let mode = 'taam';
@@ -163,7 +163,7 @@
           <div class="bar bar--thin"><span style="width:${(i / rounds.length) * 100}%"></span></div>
           <div class="game-q">
             <div class="prompt">איפה האתנחתא? ${KZ.g('הקש', 'הקישי', 'הקישו')} על המילה שבה הפסוק "נח" באמצע.</div>
-            <div class="small faint" style="margin-bottom:8px">${esc(ctx.part)} · פסוק ${esc(v.label)} · בלי טעמים, כמו בתיקון</div>
+            <div class="small faint" style="margin-bottom:8px">${esc(ctx.part)} · פסוק ${esc(v.label)} · עם ניקוד, בלי טעמים</div>
             <div class="stop-verse">${groups.map((g, gi) => `<span class="sw" data-g="${gi}" role="button" tabindex="0">${esc(g.map((ti) => KZ.stripTaamim(toks[ti].text)).join(''))}</span>`).join(' ')}</div>
             <div id="stopFb"></div>
           </div>`;
@@ -188,7 +188,7 @@
         });
       })();
     }
-    kit.intro(stage, game, `${N} פסוקים מה${ctx.part} שלכם, בלי טעמים – בדיוק כמו בתיקון. מצאו בכל פסוק את המילה עם האתנחתא: העצירה הגדולה באמצע. מי שיודע/ת איפה עוצרים – יודע/ת איפה לנשום.`, start);
+    kit.intro(stage, game, `${N} פסוקים מה${ctx.part} שלכם, עם ניקוד ובלי טעמים. מצאו בכל פסוק את המילה עם האתנחתא: העצירה הגדולה באמצע. כשיודעים איפה עוצרים, יודעים איפה לנשום.`, start);
   }
 
   /* ---------- 3. מעקב קריאה ---------- */

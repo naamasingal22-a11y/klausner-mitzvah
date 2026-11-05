@@ -11,7 +11,7 @@
 
   const GAMES = [
     { id: 'taam', name: 'טעם־מטרה', emoji: '🎵', art: '◌֖', bg: 'var(--tch-soft)', desc: 'רואים טעם – מזהים אותו. 10 שאלות על 8 הטעמים הבסיסיים.', tag: 'טעמים' },
-    { id: 'taam-adv', name: 'טעם־מטרה מתקדם', emoji: '🎼', art: '◌֒', bg: 'var(--plum-soft)', desc: 'כל הטעמים של התורה (חוץ מהנדירים מאוד). למי שכבר מרגיש/ה בבית.', tag: 'טעמים' },
+    { id: 'taam-adv', name: 'טעם־מטרה מתקדם', emoji: '🎼', art: '◌֒', bg: 'var(--plum-soft)', desc: 'כל הטעמים של התורה (חוץ מהנדירים מאוד). לשלב שבו כבר מרגישים בבית.', tag: 'טעמים' },
     { id: 'speed', name: 'מפסיק או משרת?', emoji: '⚡', art: '⚡', bg: 'var(--honey-soft)', desc: '30 שניות. כמה טעמים תספיקו למיין – עוצרים או מחברים?', tag: 'טעמים' },
     { id: 'chain', name: 'שרשרת טעמים', emoji: '⛓️', art: '⛓️', bg: 'var(--teal-soft)', desc: 'מסדרים את משפחות הטעמים בסדר הנכון – ורואים אותן בפסוק אמיתי.', tag: 'טעמים' },
     { id: 'order', name: 'סדר בתפילה', emoji: '🧩', art: '🧩', bg: 'var(--pom-soft)', desc: 'מה בא קודם – ברכו או קריאת שמע? מסדרים תפילות, עלייה לתורה ועוד.', tag: 'סידור' },
@@ -135,7 +135,7 @@
         if (left <= 0) return;
         const ok = (b.dataset.a === 'd') === (t.rank !== 'servant');
         if (ok) score++; else wrong++;
-        KZ.$('#sc', stage).textContent = score;
+        KZ.$('#sc', stage).textContent = Math.max(0, score - wrong); // טעות מורידה נקודה, כדי שלחיצות אקראיות לא ישתלמו
         b.classList.remove('right', 'wrong'); void b.offsetWidth; b.classList.add(ok ? 'right' : 'wrong');
         later(() => b.classList.remove('right', 'wrong'), 250);
         next();
@@ -146,14 +146,15 @@
         l.textContent = left; KZ.$('#tbar', stage).style.width = (left / 30 * 100) + '%';
         if (left <= 0) {
           clearInterval(iv);
-          setBest(game.id, score);
-          const pts = rewardPlay(game.id, Math.min(score, 20), game.name);
-          outro(stage, game, score, 0, pts, score >= 15 ? 'ברק! ⚡' : score >= 10 ? 'מהיר/ה!' : 'עוד סיבוב ותשברו שיא', start);
+          const net = Math.max(0, score - wrong);
+          setBest(game.id, net);
+          const pts = rewardPlay(game.id, Math.min(net, 20), game.name);
+          outro(stage, game, net, 0, pts, net >= 15 ? 'ברק! ⚡' : net >= 10 ? KZ.g('מהיר!', 'מהירה!', 'מהירים!') : 'עוד סיבוב ותשברו שיא', start);
         }
       }, 1000);
       timers.push(iv);
     }
-    intro(stage, game, 'יש לכם 30 שניות. מופיע טעם – לחצו "מפסיק" אם הוא עוצר את הפסוק, או "משרת" אם הוא מחבר אל המילה הבאה.', start);
+    intro(stage, game, 'יש לכם 30 שניות. מופיע טעם – לחצו "מפסיק" אם הוא עוצר את הפסוק, או "משרת" אם הוא מחבר אל המילה הבאה. כל טעות מורידה נקודה, אז עדיף לחשוב שנייה.', start);
   }
 
   /* ---------- סידור לפי סדר (משותף לשרשרת ולתפילה) ---------- */

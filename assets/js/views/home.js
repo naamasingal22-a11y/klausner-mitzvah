@@ -30,6 +30,34 @@
     </a>`;
   }
 
+  // הצעד הבא בלמידה: השיעור הבא בקורס, ואחרי הקורס – התרגול מהפרשה שלי
+  function nextStepCard() {
+    const L = KZ.courseLessons || [];
+    const done = (S.course && S.course.done) || {};
+    const i = L.findIndex((l) => !done[l.id]);
+    if (i >= 0) {
+      const l = L[i];
+      return `<div class="card next-step">
+        <span class="overline">הצעד הבא שלך</span>
+        <h3>${l.emoji} שיעור ${i + 1} מתוך ${L.length}: ${esc(l.title)}</h3>
+        <p class="small">${esc(l.goal)}</p>
+        <div class="btn-row">
+          <a class="btn btn--sm" href="#/library/course/${l.id}">${i === 0 ? 'להתחיל' : 'להמשיך'} ←</a>
+          <a class="btn btn--ghost btn--sm" href="#/library/practice">⭐ הפרשה שלי</a>
+        </div>
+      </div>`;
+    }
+    return `<div class="card next-step">
+      <span class="overline">הצעד הבא שלך</span>
+      <h3>⭐ מתרגלים את הפסוקים שלי</h3>
+      <p class="small">${KZ.g('סיימת', 'סיימת', 'סיימתם')} את הקורס! עכשיו מתרגלים את הקטע ש${KZ.g('תקרא', 'תקראי', 'תקראו')} בעלייה.</p>
+      <div class="btn-row">
+        <a class="btn btn--sm" href="#/library/practice">לתרגול ←</a>
+        <a class="btn btn--ghost btn--sm" href="#/library/reader">📜 קורא הפרשה</a>
+      </div>
+    </div>`;
+  }
+
   function nextStationCard() {
     const list = KZ.journeyList ? KZ.journeyList() : [];
     const next = list.find((a) => !a.me && !a.future && !(S.checkins[a.id] || []).length);
@@ -108,6 +136,8 @@
           <span class="doodle doodle--stars" aria-hidden="true"><svg viewBox="0 0 46 46"><path d="M14 4v14M7 11h14M34 22v10M29 27h10M10 34l4 4M14 34l-4 4"/></svg></span>
         </div>
       </section>
+
+      <section class="section">${nextStepCard()}</section>
 
       <section class="section grid-3">
         ${countdownCard()}

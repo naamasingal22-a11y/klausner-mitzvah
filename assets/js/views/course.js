@@ -150,8 +150,9 @@
     const fb = KZ.$('#qFb', box);
     const finish = (ok, explain) => {
       fb.classList.add(ok ? 'fb-box--ok' : 'fb-box--fix');
-      fb.innerHTML = ok ? '✓ נכון!' : explain;
-      kit.afterAnswer(fb, ok, () => onResult(ok), 1000);
+      // גם בתשובה נכונה מראים את ההסבר, ומחכים ללחיצה כדי שיהיה זמן לקרוא
+      fb.innerHTML = ok ? `✓ נכון!${explain ? ' ' + explain : ''}` : explain;
+      kit.afterAnswer(fb, ok && !explain, () => onResult(ok), 1000);
     };
     if (options) {
       let answered = false;
@@ -237,7 +238,7 @@
       st.mode = 'quiz'; st.q = 0; st.score = 0;
       drawDots();
       stage.innerHTML = `<div class="center"><div class="notice-big__icon" style="font-size:44px;width:84px;height:84px">✍️</div>
-        <h2 style="padding:0">בוחן קצר</h2><p class="muted">${l.quiz.length} שאלות. כדי לעבור צריך ${passMark(l.quiz.length)} תשובות נכונות. אחרי כל טעות יופיע הסבר.</p></div>`;
+        <h2 style="padding:0">בוחן קצר</h2><p class="muted">${l.quiz.length} שאלות. כדי לעבור צריך ${passMark(l.quiz.length)} תשובות נכונות. אחרי כל תשובה יופיע הסבר.</p></div>`;
       nav.innerHTML = `<button type="button" class="btn btn--ghost" data-nav="back">→ חזרה לשיעור</button><button type="button" class="btn btn--marker" data-nav="startQuiz">יאללה ←</button>`;
     }
     function question() {

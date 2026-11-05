@@ -140,7 +140,7 @@
             <div class="field"><span>אני</span><div class="seg" role="group"><button type="button" data-g="f" aria-pressed="${p.gender === 'f'}">בת</button><button type="button" data-g="m" aria-pressed="${p.gender === 'm'}">בן</button></div></div>
           </div>
           <label class="check"><input type="checkbox" name="sunset" ${p.afterSunset ? 'checked' : ''}> נולדתי אחרי השקיעה (בערב או בלילה)</label>
-          <p class="small faint" style="margin:6px 0 14px">ביהדות היום מתחיל בערב – מי שנולד/ה אחרי השקיעה, התאריך העברי שלו/ה הוא כבר של היום הבא.</p>
+          <p class="small faint" style="margin:6px 0 14px">ביהדות היום מתחיל בערב. אם נולדת אחרי השקיעה, התאריך העברי שלך הוא כבר של היום הבא.</p>
           <button class="btn" type="submit">${icon('calendar')} חשבו לי!</button>
           <span id="calcStatus" class="small muted" style="margin-inline-start:10px"></span>
         </form>
