@@ -266,7 +266,7 @@
               <div class="blessing">${A.before.map((b) => b.who === 'קהל' ? `<span class="resp">${esc(b.text)}</span>` : `<span>${esc(b.text)}</span> `).join('')}</div></div>
             <div class="card"><h2>הברכה האחרונה</h2><div class="blessing">${esc(A.after)}</div></div>
             <div class="card"><h3>ולמי שעולה למפטיר: ברכות ההפטרה</h3>
-              <p class="small muted" style="margin:0 0 8px">בעלייה למפטיר קוראים גם את ההפטרה, ומברכים לפניה ואחריה.</p>
+              <p class="small muted" style="margin:0 0 8px">מי שעולה למפטיר הוא בדרך כלל גם זה שקורא את ההפטרה, ומברך לפניה ואחריה.</p>
               <h4 style="margin:0 0 6px">הברכה שלפני ההפטרה</h4>
               <div class="blessing" style="font-size:1.2rem">${esc(A.haftarahBefore)}</div>
               <details class="haft-after"><summary>הברכות שאחרי ההפטרה (${A.haftarahAfter.length} ברכות) ›</summary>
