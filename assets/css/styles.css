@@ -949,3 +949,22 @@ th { background: var(--sky-deep); }
   body { background: #fff; padding: 0; }
   .card { box-shadow: none; }
 }
+
+/* ---------- סימני תנועה מעל המילים (מפת הסידור) ---------- */
+.moves { display: grid; gap: 8px; margin: 4px 0 12px; }
+.mv-line { padding: 6px 12px 10px; border-radius: 10px; background: var(--card-2); border: 1.5px solid var(--line); }
+.mv-line__label { display: block; font-size: var(--fs-xs); font-weight: 700; color: var(--ink-2); margin-bottom: 2px; }
+.mv { display: flex; flex-wrap: wrap; align-items: flex-end; column-gap: .34em; row-gap: 6px; font-family: var(--font-text); font-size: 1.25rem; line-height: 1.45; }
+.mv__u { display: inline-flex; flex-direction: column; align-items: center; }
+.mv__m { display: flex; align-items: flex-end; justify-content: center; font-family: var(--font); }
+.mv__m:empty { display: none; }
+.mv__m b {
+  display: inline-block; font-size: 1.05rem; line-height: 1.35; font-weight: 400; padding: 1px 7px; margin-bottom: 3px;
+  background: #fff; color: var(--ink); border: 1.5px solid var(--edge); border-radius: 999px; box-shadow: 1.5px 1.5px 0 var(--edge);
+  white-space: nowrap;
+}
+.mv__u--on .mv__w { background: linear-gradient(transparent 58%, var(--marker) 58%, var(--marker) 92%, transparent 92%); padding: 0 1px; }
+.mv__u--solo .mv__w { font-family: var(--font); font-size: var(--fs-xs); font-weight: 700; color: var(--ink-2); line-height: 1.9rem; }
+.mv-key { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--fs-xs); color: var(--ink-2); margin-top: 2px; }
+.mv-key b { display: inline-block; min-width: 1.6em; text-align: center; padding: 0 4px; margin-left: 3px; background: #fff; border: 1px solid var(--line-2); border-radius: 999px; color: var(--ink); }
+.words__line--all .mv__u--on .mv__w { color: var(--sky-ink); }

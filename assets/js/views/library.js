@@ -72,10 +72,31 @@
   KZ.siddurTabIds = () => siddurTabs().map((t) => t.id);
   const tourOf = (tab) => { S.siddurTour = S.siddurTour || {}; S.siddurTour[tab] = S.siddurTour[tab] || { i: 0, res: {} }; return S.siddurTour[tab]; };
 
+  // שורה מהסידור עם סימני תנועה מעל המילים (KZ.moveMarks):
+  // "[bow]בָּרוּךְ" – הסימן מעל המילה. "[fwd]" לבד – עושים את זה לפני המילה הבאה.
+  function moveLine(line, used) {
+    return line.split(/\s+/).filter(Boolean).map((tok) => {
+      const m = tok.match(/^\[(\w+)\](.*)$/);
+      const mk = m && KZ.moveMarks[m[1]];
+      const word = m ? m[2] : tok;
+      if (!mk) return `<span class="mv__u"><span class="mv__m"></span><span class="mv__w">${esc(word)}</span></span>`;
+      if (!used.includes(m[1])) used.push(m[1]);
+      const chip = `<span class="mv__m"><b title="${esc(mk.t)}">${mk.s}</b></span>`;
+      return word
+        ? `<span class="mv__u mv__u--on">${chip}<span class="mv__w">${esc(word)}</span></span>`
+        : `<span class="mv__u mv__u--solo">${chip}<span class="mv__w">${esc(mk.short || mk.t)}</span></span>`;
+    }).join('');
+  }
+  const moveKey = (used) => used.length ? `<div class="mv-key">${used.map((k) => `<span><b>${KZ.moveMarks[k].s}</b> ${esc(KZ.moveMarks[k].t)}</span>`).join('')}</div>` : '';
+
   function partBody(p) {
+    const wUsed = [], mUsed = [];
+    const wordsHTML = p.words ? p.words.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span>${w.text.includes('[') ? `<span class="words__text mv">${moveLine(w.text, wUsed)}</span>` : `<span class="words__text">${esc(w.text)}</span>`}</div>`).join('') : '';
+    const movesHTML = p.moves ? p.moves.map((m) => `<div class="mv-line">${m.label ? `<span class="mv-line__label">${esc(m.label)}</span>` : ''}<div class="mv">${moveLine(m.line, mUsed)}</div></div>`).join('') : '';
     return `${p.highlight ? `<div class="highlight"><b>⭐ הרגע לתפוס:</b> ${esc(p.highlight)}</div>` : ''}
       ${p.say ? `<div class="small muted">עונים:</div><div class="say">${esc(p.say)}</div>` : ''}
-      ${p.words ? `<div class="small muted">אומרים:</div><div class="words">${p.words.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span><span class="words__text">${esc(w.text)}</span></div>`).join('')}</div>` : ''}
+      ${p.words ? `<div class="small muted">אומרים:</div><div class="words">${wordsHTML}${moveKey(wUsed)}</div>` : ''}
+      ${p.moves ? `<div class="small muted">מה עושים בגוף – מילה במילה:</div><div class="moves">${movesHTML}${moveKey(mUsed)}</div>` : ''}
       ${p.practice && p.practice.length ? `<div class="small muted" style="margin-bottom:4px">מה עושים:</div><ul class="practice">${p.practice.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
       ${p.link ? `<p style="margin-top:10px"><a class="btn btn--sm btn--ghost" href="${p.link.href}">${esc(p.link.label)}</a></p>` : ''}`;
   }
