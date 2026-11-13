@@ -28,6 +28,7 @@
 | אתגרים, תגים, שלבי הרימון | `assets/js/data/quests.js` |
 | טעמים | `assets/js/data/taamim.js` |
 | סידור, עלייה לתורה, מילון | `assets/js/data/siddur.js` |
+| הצעדים והשאלות בסיור "צעד אחר צעד" של מפת הסידור | `assets/js/data/siddur-checks.js` |
 | צבעים ועיצוב | `assets/css/styles.css` (המשתנים בראש הקובץ) |
 
 כשנקבע תאריך, כותבים `date: '2026-11-13'`. כשמישהו לוקח אחריות, ממלאים `owner` ומשנים את `status` ל־`'ok'`.

@@ -63,14 +63,23 @@
   };
 
   /* ---------- הסידור ---------- */
-  // שני מצבים: "צעד אחר צעד" – חלק אחד בכל מסך ושאלה קצרה אחריו (ברירת מחדל),
-  // ו"כל המפה" – הכול ברשימה, למי שרוצה לעיין
+  // שני מצבים: "צעד אחר צעד" – קטע קצר, ואז שאלה בלי להציץ (ברירת מחדל),
+  // ו"כל המפה" – הכול ברשימה, לעיון ולחזרה
   let siddurTab = 'shabbat';
   let siddurMode = 'tour';
   const EXTRA_TABS = [{ id: 'body', name: 'תפילה בגוף', emoji: '🧍' }, { id: 'resp', name: 'מה עונים', emoji: '🗣️' }];
   const siddurTabs = () => [...KZ.siddur.services.map((s) => ({ id: s.id, name: s.name, emoji: s.emoji })), ...EXTRA_TABS];
   KZ.siddurTabIds = () => siddurTabs().map((t) => t.id);
-  const tourOf = (tab) => { S.siddurTour = S.siddurTour || {}; S.siddurTour[tab] = S.siddurTour[tab] || { i: 0, res: {} }; return S.siddurTour[tab]; };
+  const isService = (tab) => KZ.siddur.services.some((s) => s.id === tab);
+  // גרסה 2: כל חלק מתחלק לכמה צעדים קטנים. מי שהתחיל/ה בסיור הישן מתחיל/ה מחדש
+  // (הסימון "סיימת" והגרעינים שכבר התקבלו – נשארים)
+  const TOUR_V = 2;
+  const tourOf = (tab) => {
+    S.siddurTour = S.siddurTour || {};
+    const st = S.siddurTour[tab] = S.siddurTour[tab] || { i: 0, res: {} };
+    if (st.v !== TOUR_V) { if (isService(tab)) { st.i = 0; st.res = {}; } st.v = TOUR_V; }
+    return st;
+  };
 
   // שורה מהסידור עם סימני תנועה מעל המילים (KZ.moveMarks):
   // "[bow]בָּרוּךְ" – הסימן מעל המילה. "[fwd]" לבד – עושים את זה לפני המילה הבאה.
@@ -89,35 +98,86 @@
   }
   const moveKey = (used) => used.length ? `<div class="mv-key">${used.map((k) => `<span><b>${KZ.moveMarks[k].s}</b> ${esc(KZ.moveMarks[k].t)}</span>`).join('')}</div>` : '';
 
-  function partBody(p) {
-    const wUsed = [], mUsed = [];
-    const wordsHTML = p.words ? p.words.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span>${w.text.includes('[') ? `<span class="words__text mv">${moveLine(w.text, wUsed)}</span>` : `<span class="words__text">${esc(w.text)}</span>`}</div>`).join('') : '';
-    const movesHTML = p.moves ? p.moves.map((m) => `<div class="mv-line">${m.label ? `<span class="mv-line__label">${esc(m.label)}</span>` : ''}<div class="mv">${moveLine(m.line, mUsed)}</div></div>`).join('') : '';
-    return `${p.highlight ? `<div class="highlight"><b>⭐ הרגע לתפוס:</b> ${esc(p.highlight)}</div>` : ''}
-      ${p.say ? `<div class="small muted">עונים:</div><div class="say">${esc(p.say)}</div>` : ''}
-      ${p.words ? `<div class="small muted">אומרים:</div><div class="words">${wordsHTML}${moveKey(wUsed)}</div>` : ''}
-      ${p.moves ? `<div class="small muted">מה עושים בגוף – מילה במילה:</div><div class="moves">${movesHTML}${moveKey(mUsed)}</div>` : ''}
-      ${p.practice && p.practice.length ? `<div class="small muted" style="margin-bottom:4px">מה עושים:</div><ul class="practice">${p.practice.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-      ${p.link ? `<p style="margin-top:10px"><a class="btn btn--sm btn--ghost" href="${p.link.href}">${esc(p.link.label)}</a></p>` : ''}`;
+  // אותה שורה בלי הסימנים, כמילים להקשה ("באיזו מילה כורעים?")
+  function tapLine(line, mark) {
+    return line.split(/\s+/).filter(Boolean).map((tok) => {
+      const m = tok.match(/^\[(\w+)\](.*)$/);
+      const word = m ? m[2] : tok;
+      if (!word) return '';
+      return `<span class="sw" role="button" tabindex="0" data-ok="${m && m[1] === mark ? 1 : 0}">${esc(word)}</span>`;
+    }).filter(Boolean).join(' ');
   }
+
+  // חלקי התוכן של כל חלק בתפילה – אותם חלקים ב"כל המפה" ובצעדים.
+  // idx – אילו שורות להראות (למשל [0, 1]); בלי idx – את כולן
+  const pick = (arr, idx) => (idx ? idx.map((k) => arr[k]).filter(Boolean) : arr);
+  const PIECES = {
+    what: (p) => (p.what ? `<p class="tour-what">${esc(p.what)}</p>` : ''),
+    highlight: (p) => (p.highlight ? `<div class="highlight"><b>⭐ הרגע לתפוס:</b> ${esc(p.highlight)}</div>` : ''),
+    say: (p) => (p.say ? `<div class="small muted">עונים:</div><div class="say">${esc(p.say)}</div>` : ''),
+    words(p, idx) {
+      const lines = p.words ? pick(p.words, idx) : [];
+      if (!lines.length) return '';
+      const used = [];
+      const html = lines.map((w) => `<div class="words__line ${w.who === 'כולם' ? 'words__line--all' : ''}"><span class="words__who">${esc(w.who)}</span>${w.text.includes('[') ? `<span class="words__text mv">${moveLine(w.text, used)}</span>` : `<span class="words__text">${esc(w.text)}</span>`}</div>`).join('');
+      return `<div class="small muted">אומרים:</div><div class="words">${html}${moveKey(used)}</div>`;
+    },
+    moves(p, idx) {
+      const lines = p.moves ? pick(p.moves, idx) : [];
+      if (!lines.length) return '';
+      const used = [];
+      const html = lines.map((m) => `<div class="mv-line">${m.label ? `<span class="mv-line__label">${esc(m.label)}</span>` : ''}<div class="mv">${moveLine(m.line, used)}</div></div>`).join('');
+      return `<div class="small muted">מה עושים בגוף – מילה במילה:</div><div class="moves">${html}${moveKey(used)}</div>`;
+    },
+    practice(p, idx) {
+      const items = p.practice ? pick(p.practice, idx) : [];
+      return items.length ? `<div class="small muted" style="margin-bottom:4px">מה עושים:</div><ul class="practice">${items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : '';
+    },
+  };
+  const linkHTML = (p) => (p.link ? `<p style="margin-top:10px"><a class="btn btn--sm btn--ghost" href="${p.link.href}">${esc(p.link.label)}</a></p>` : '');
+  const partBody = (p) => ['highlight', 'say', 'words', 'moves', 'practice'].map((k) => PIECES[k](p)).join('') + linkHTML(p);
+  // "what highlight practice:0,1" – רק מה שהצעד מבקש להראות
+  const parseShow = (show) => String(show || '').trim().split(/\s+/).filter(Boolean).map((t) => {
+    const [k, n] = t.split(':');
+    return { k, idx: n ? n.split(',').map(Number) : null };
+  });
+  const chunkHTML = (p, show) => parseShow(show).map(({ k, idx }) => (PIECES[k] ? PIECES[k](p, idx) : '')).join('');
+  // "moves:1" / "words:3" – השורה לשאלת ההקשה
+  function lineOf(p, ref) {
+    const [k, n] = String(ref || '').split(':');
+    const row = (k === 'moves' ? p.moves : k === 'words' ? p.words : null) || [];
+    const r = row[+n || 0];
+    return r ? (r.line || r.text || '') : '';
+  }
+
   const bodyCard = (b) => `<div class="card card--flat body-item"><span class="e">${b.e}</span><div><strong>${esc(b.title)}</strong><div class="muted small">${esc(b.text)}</div></div></div>`;
   const respCard = (r) => `<div class="card card--flat"><strong>${esc(r.when)}</strong><div class="say">${esc(r.say)}</div><div class="small muted">${esc(r.note)}</div></div>`;
 
-  // השלבים של כל לשונית
+  // הצעדים של כל לשונית. g – מספר החלק (נקודה אחת בפס ההתקדמות), k מתוך n – הצעד בתוך החלק
   function tourSteps(tab) {
     const sv = KZ.siddur.services.find((s) => s.id === tab);
-    if (sv) return sv.parts.map((p) => ({ kind: 'part', p, check: (KZ.siddurChecks[tab] || {})[p.name] }));
-    if (tab === 'body') return KZ.siddur.body.map((b) => ({ kind: 'body', b }));
-    return KZ.siddur.responses.map((r) => ({ kind: 'resp', r }));
+    if (sv) {
+      const out = [];
+      sv.parts.forEach((p, g) => {
+        let list = (KZ.siddurChecks[tab] || {})[p.name];
+        if (list && !Array.isArray(list)) list = [{ show: 'what highlight say words moves practice', ...list }];
+        if (!list || !list.length) list = [null]; // חלק בלי צעדים – מראים הכול, בלי שאלה
+        list.forEach((c, k) => out.push({ kind: 'part', p, c, g, k, n: list.length }));
+      });
+      return out;
+    }
+    if (tab === 'body') return KZ.siddur.body.map((b, g) => ({ kind: 'body', b, g, k: 0, n: 1 }));
+    return KZ.siddur.responses.map((r, g) => ({ kind: 'resp', r, g, k: 0, n: 1 }));
   }
   // שתי תשובות שגויות מתוך שאר הפריטים
   const others = (list, item, n = 2) => KZ.sample(list.filter((x) => x !== item), n);
 
+  const toTour = `<p class="note">זה הסיכום המלא – לעיון ולחזרה. כדי ללמוד ולבדוק את עצמכם: <button type="button" class="btn btn--sm btn--ghost" data-act="siddur-mode" data-m="tour">🚶 צעד אחר צעד</button></p>`;
   function mapHTML(tab) {
     const sv = KZ.siddur.services.find((s) => s.id === tab);
-    if (tab === 'body') return `<div class="body-grid">${KZ.siddur.body.map(bodyCard).join('')}</div>`;
-    if (tab === 'resp') return `<div class="grid-2">${KZ.siddur.responses.map(respCard).join('')}</div>`;
-    return `
+    if (tab === 'body') return `${toTour}<div class="body-grid">${KZ.siddur.body.map(bodyCard).join('')}</div>`;
+    if (tab === 'resp') return `${toTour}<div class="grid-2">${KZ.siddur.responses.map(respCard).join('')}</div>`;
+    return `${toTour}
       <div class="map-legend">
         <strong>איך קוראים את המפה?</strong>
         <div class="map-legend__row"><span class="highlight map-legend__tag"><b>⭐ הרגע לתפוס</b></span><span>הרגע הכי חזק או מעניין בחלק הזה של התפילה – משפט, רעיון או מנגינה. גם אם קשה להתרכז בכל התפילה, שווה "לתפוס" לפחות את הרגע הזה: לשים לב אליו, לומר אותו לאט, לשיר אותו עם כולם.</span></div>
@@ -138,10 +198,10 @@
       if (!tabs.some((t) => t.id === siddurTab)) siddurTab = tabs[0].id;
       return `${crumbs('מפת הסידור')}
         <header class="page-head"><h1>מפת הסידור</h1>
-          <p>${siddurMode === 'tour' ? 'מה קורה בכל חלק של התפילה, ומה עושים. חלק אחד בכל פעם – ושאלה קצרה אחרי כל חלק.' : 'כל החלקים ברשימה אחת. ' + KZ.g('לחץ', 'לחצי', 'לחצו') + ' על חלק כדי לפתוח.'}</p></header>
+          <p>${siddurMode === 'tour' ? 'קטע קצר בכל פעם – ואחריו שאלה, בלי להציץ. ההתקדמות נשמרת, ואפשר להמשיך בכל פעם מאותו מקום.' : 'כל החלקים ברשימה אחת. ' + KZ.g('לחץ', 'לחצי', 'לחצו') + ' על חלק כדי לפתוח.'}</p></header>
         <div class="seg siddur-mode" role="group" aria-label="אופן התצוגה" style="margin-bottom:10px">
           <button type="button" data-act="siddur-mode" data-m="tour" aria-pressed="${siddurMode === 'tour'}">🚶 צעד אחר צעד</button>
-          <button type="button" data-act="siddur-mode" data-m="map" aria-pressed="${siddurMode === 'map'}">🗺️ כל המפה</button>
+          <button type="button" data-act="siddur-mode" data-m="map" aria-pressed="${siddurMode === 'map'}">🗺️ כל המפה (לעיון)</button>
         </div>
         <div class="seg service-tabs" role="tablist">${tabs.map((t) => `<button type="button" aria-pressed="${t.id === siddurTab}" data-act="siddur-tab" data-id="${t.id}">${t.emoji} ${esc(t.name)}${S.siddurTour && S.siddurTour[t.id] && S.siddurTour[t.id].done ? ' ✓' : ''}</button>`).join('')}</div>
         ${siddurMode === 'tour' ? '<div id="tour"></div>' : mapHTML(siddurTab)}
@@ -158,11 +218,25 @@
       const tabs = siddurTabs();
       const tabMeta = tabs.find((t) => t.id === tab);
       const steps = tourSteps(tab);
+      const groups = steps.length ? steps[steps.length - 1].g + 1 : 0;
       const st = tourOf(tab);
       if (st.i > steps.length) st.i = 0;
+      const hasQ = (s) => s.kind !== 'part' || !!s.c;
+      // מפתח קבוע לגרעינים: לפי שם החלק ומספר הצעד בתוכו (לא לפי המיקום ברשימה)
+      const awardKey = (s, i) => (s.kind === 'part' ? `siddur:${tab}:${s.p.name}#${s.k}` : `siddur:${tab}:${i}`);
 
+      // נקודה אחת לכל חלק בתפילה: צהובה – כאן, כחולה – נכון בפעם הראשונה, אדומה – הייתה טעות
       function dots() {
-        return `<div class="c-dots tour-dots" aria-hidden="true">${steps.map((_, k) => `<i class="${k === st.i ? 'on' : st.res[k] === true ? 'past' : st.res[k] === false ? 'miss' : ''}"></i>`).join('')}</div>`;
+        const cur = st.i < steps.length ? steps[st.i].g : -1;
+        const cls = (g) => {
+          if (g === cur) return 'on';
+          const mine = steps.map((s, i) => ({ s, i })).filter((x) => x.s.g === g);
+          const qs = mine.filter((x) => hasQ(x.s));
+          const done = qs.length ? qs.every((x) => st.res[x.i] !== undefined) : mine[mine.length - 1].i < st.i;
+          if (!done) return '';
+          return qs.some((x) => st.res[x.i] === false) ? 'miss' : 'past';
+        };
+        return `<div class="c-dots tour-dots" aria-hidden="true">${Array.from({ length: groups }, (_, g) => `<i class="${cls(g)}"></i>`).join('')}</div>`;
       }
       function nav(canNext) {
         return `<div class="c-nav">
@@ -170,48 +244,93 @@
           <button type="button" class="btn ${st.i === steps.length - 1 ? 'btn--marker' : ''}" data-tour="next" ${canNext ? '' : 'disabled title="קודם עונים על השאלה"'}>${st.i === steps.length - 1 ? 'סיום ✓' : 'הבא ←'}</button>
         </div>`;
       }
-      // שאלה: מסמנים תשובה, מציגים הסבר, ופותחים את "הבא"
-      function bindQuestion(correctKey, explainHTML, onAfter) {
-        let answered = false;
+      const optsHTML = (opts, cls = '') => `<div class="options">${opts.map((o) => `<button type="button" class="opt ${cls}" data-k="${esc(o.k)}">${o.html}</button>`).join('')}</div>`;
+
+      // אחרי תשובה: הסבר, גרעינים על הצלחה בפעם הראשונה, ופתיחת "הבא"
+      function answered(s, ok, explainHTML, afterHTML) {
+        const first = st.res[st.i] === undefined;
+        if (first) st.res[st.i] = ok;
+        KZ.save();
+        if (ok && first) KZ.award(awardKey(s, st.i), 2, `מפת הסידור: ${tabMeta.name}`, { silent: true });
+        const fb = KZ.$('#tourFb', box);
+        fb.classList.add(ok ? 'fb-box--ok' : 'fb-box--fix');
+        fb.innerHTML = `${ok ? `✓ נכון!${first ? ' <span class="tag tag--seed">+2</span>' : ''} ` : 'כמעט! '}${explainHTML}`;
+        if (afterHTML) KZ.$('#tourAfter', box).innerHTML = afterHTML;
+        const nx = KZ.$('[data-tour="next"]', box);
+        nx.disabled = false;
+        nx.removeAttribute('title');
+      }
+      function bindOpts(correctKey, onAnswer) {
+        let done = false;
         KZ.$$('.opt', box).forEach((b) => b.addEventListener('click', () => {
-          if (answered) return; answered = true;
+          if (done) return; done = true;
           const ok = b.dataset.k === correctKey;
           b.classList.add(ok ? 'right' : 'wrong');
           if (!ok) KZ.$(`.opt[data-k="${CSS.escape(correctKey)}"]`, box).classList.add('right');
-          const first = st.res[st.i] === undefined;
-          if (first) st.res[st.i] = ok;
-          KZ.save();
-          if (ok && first) KZ.award(`siddur:${tab}:${st.i}`, 2, `מפת הסידור: ${tabMeta.name}`, { silent: true });
-          const fb = KZ.$('#tourFb', box);
-          fb.classList.add(ok ? 'fb-box--ok' : 'fb-box--fix');
-          fb.innerHTML = `${ok ? `✓ נכון!${first ? ' <span class="tag tag--seed">+2</span>' : ''} ` : 'כמעט! '}${explainHTML}`;
-          if (onAfter) onAfter(ok);
-          KZ.$('[data-tour="next"]', box).disabled = false;
-          KZ.$('[data-tour="next"]', box).removeAttribute('title');
+          onAnswer(ok);
         }));
       }
-      const optsHTML = (opts, cls = '') => `<div class="options">${opts.map((o) => `<button type="button" class="opt ${cls}" data-k="${esc(o.k)}">${o.html}</button>`).join('')}</div>`;
+      function bindTap(onAnswer) {
+        let done = false;
+        const tap = (sw) => {
+          if (done) return; done = true;
+          const ok = sw.dataset.ok === '1';
+          if (!ok) sw.classList.add('wrong');
+          KZ.$$('.sw[data-ok="1"]', box).forEach((x) => x.classList.add('right'));
+          onAnswer(ok);
+        };
+        KZ.$$('.sw', box).forEach((sw) => {
+          sw.addEventListener('click', () => tap(sw));
+          sw.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tap(sw); } });
+        });
+      }
+
+      function drawPart(s, head) {
+        const p = s.p, c = s.c;
+        const review = !!c && !c.show; // "זוכרים?" – שאלה בלי קטע חדש
+        const info = c ? chunkHTML(p, c.show) : PIECES.what(p) + partBody(p);
+        const src = c && c.tap ? lineOf(p, c.line) : '';
+        const ask = c ? `
+          <div class="c-task tour-check" id="tourCheck"${review ? '' : ' hidden'}>
+            <span class="sticker" style="--r:-3deg;font-size:1.05rem">${review ? '🔁 זוכרים?' : 'בדיקה קטנה ✓'}</span>
+            <p class="c-prompt">${esc(c.q)}</p>
+            ${c.tap
+              ? `<p class="small muted" style="margin:0 0 4px">${KZ.g('הקש', 'הקישי', 'הקישו')} על המילה:</p><div class="stop-verse c-find tour-tap">${tapLine(src, c.tap)}</div>`
+              : optsHTML(KZ.shuffle(c.o.map((o, k) => ({ k: String(k), html: esc(o) }))))}
+            <div class="fb-box" id="tourFb"></div>
+            <div id="tourAfter"></div>
+          </div>` : '';
+        box.innerHTML = `${head}
+          <div class="card tour-card">
+            <div class="tour-title"><h2 class="c-title">${esc(p.name)}</h2>${s.n > 1 ? `<span class="tour-sub">צעד ${s.k + 1} מתוך ${s.n}</span>` : ''}</div>
+            ${review ? '' : `<div id="tourInfo">${info}</div>`}
+            ${c && !review ? `<div class="tour-go" id="tourGo">
+              <button type="button" class="btn btn--marker" data-tour="ask">קראתי – לשאלה ←</button>
+              <span class="small muted">הקטע יוסתר, ו${KZ.g('תענה', 'תעני', 'תענו')} מהזיכרון.</span></div>` : ''}
+            ${ask}
+          </div>${nav(!c || st.res[st.i] !== undefined)}`;
+        if (!c) return;
+        const after = () => {
+          const out = [];
+          if (c.tap) { const used = []; const ml = moveLine(src, used); out.push(`<div class="tour-marked"><div class="small muted">עם הסימנים:</div><div class="mv">${ml}</div>${moveKey(used)}</div>`); }
+          if (!review && info) out.push(`<details class="tour-again"><summary>📖 לקרוא שוב את הקטע</summary>${info}</details>`);
+          if (s.k === s.n - 1) out.push(linkHTML(p));
+          return out.join('');
+        };
+        const onAnswer = (ok) => answered(s, ok, esc(c.e || ''), after());
+        if (c.tap) bindTap(onAnswer); else bindOpts(String(c.a), onAnswer);
+      }
 
       function draw() {
         st.i = Math.max(0, Math.min(st.i, steps.length));
         KZ.save();
         if (st.i === steps.length) return summary();
         const s = steps[st.i];
-        const head = `<div class="tour-head"><span class="overline">${tabMeta.emoji} ${esc(tabMeta.name)} · ${st.i + 1} מתוך ${steps.length}</span>${dots()}</div>`;
-        if (s.kind === 'part') {
-          const p = s.p, c = s.check;
-          box.innerHTML = `${head}
-            <div class="card tour-card">
-              <h2 class="c-title">${esc(p.name)}</h2>
-              <p class="tour-what">${esc(p.what)}</p>
-              ${partBody(p)}
-              ${c ? `<div class="c-task tour-check"><span class="sticker" style="--r:-3deg;font-size:1.05rem">בדיקה קטנה ✓</span>
-                <p class="c-prompt">${esc(c.q)}</p>
-                ${optsHTML(KZ.shuffle(c.o.map((o, k) => ({ k: String(k), html: esc(o) }))))}
-                <div class="fb-box" id="tourFb"></div></div>` : ''}
-            </div>${nav(!c)}`;
-          if (c) bindQuestion(String(c.a), esc(c.e || ''));
-        } else if (s.kind === 'body') {
+        const pos = s.kind === 'part' ? `חלק ${s.g + 1} מתוך ${groups}` : `${st.i + 1} מתוך ${steps.length}`;
+        const head = `<div class="tour-head"><span class="overline">${tabMeta.emoji} ${esc(tabMeta.name)} · ${pos}</span>${dots()}</div>`;
+        if (s.kind === 'part') return drawPart(s, head);
+        const again = st.res[st.i] !== undefined;
+        if (s.kind === 'body') {
           // קודם מנחשים, ואז רואים את ההסבר
           const b = s.b, prompt = (KZ.siddurBodyPrompts || {})[b.title] || b.text;
           const opts = KZ.shuffle([b, ...others(KZ.siddur.body, b)]).map((x) => ({ k: x.title, html: `${x.e} ${esc(x.title)}` }));
@@ -221,9 +340,9 @@
               <h2 class="c-title">מה עושים?</h2>
               ${optsHTML(opts)}
               <div class="fb-box" id="tourFb"></div>
-              <div id="tourReveal"></div>
-            </div>${nav(false)}`;
-          bindQuestion(b.title, '', () => { KZ.$('#tourReveal', box).innerHTML = bodyCard(b); });
+              <div id="tourAfter"></div>
+            </div>${nav(again)}`;
+          bindOpts(b.title, (ok) => answered(s, ok, '', bodyCard(b)));
         } else {
           const r = s.r;
           const opts = KZ.shuffle([r, ...others(KZ.siddur.responses, r)]).map((x) => ({ k: x.when, html: `<span class="text">${esc(x.say)}</span>` }));
@@ -233,13 +352,13 @@
               <h2 class="c-title">מה עונים?</h2>
               ${optsHTML(opts, 'opt--say')}
               <div class="fb-box" id="tourFb"></div>
-              <div id="tourReveal"></div>
-            </div>${nav(false)}`;
-          bindQuestion(r.when, '', () => { KZ.$('#tourReveal', box).innerHTML = respCard(r); });
+              <div id="tourAfter"></div>
+            </div>${nav(again)}`;
+          bindOpts(r.when, (ok) => answered(s, ok, '', respCard(r)));
         }
       }
       function summary() {
-        const total = steps.filter((s) => s.kind !== 'part' || s.check).length;
+        const total = steps.filter(hasQ).length;
         const right = Object.values(st.res).filter(Boolean).length;
         if (!st.done) {
           st.done = Date.now(); KZ.save(); KZ.confetti(70);
@@ -255,12 +374,21 @@
             <p class="muted">${right} מתוך ${total} תשובות נכונות בפעם הראשונה.</p>
             <div class="btn-row" style="justify-content:center">
               ${next ? `<button type="button" class="btn btn--marker" data-act="siddur-tab" data-id="${next.id}">${next.emoji} ל${esc(next.name)} ←</button>` : '<span class="sticker" style="--r:-3deg">📖 עברת על כל המפה!</span>'}
+              <button type="button" class="btn btn--ghost" data-act="siddur-mode" data-m="map">🗺️ לכל המפה – לחזרה</button>
               <button type="button" class="btn btn--ghost" data-tour="restart">מההתחלה</button>
             </div>
           </div>`;
       }
       box.addEventListener('click', (e) => {
         const b = e.target.closest('[data-tour]'); if (!b || b.disabled) return;
+        if (b.dataset.tour === 'ask') {
+          // מסתירים את הקטע ועוברים לשאלה
+          KZ.$('#tourInfo', box).hidden = true;
+          KZ.$('#tourGo', box).remove();
+          KZ.$('#tourCheck', box).hidden = false;
+          box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
         if (b.dataset.tour === 'prev') st.i--;
         else if (b.dataset.tour === 'next') st.i++;
         else if (b.dataset.tour === 'restart') st.i = 0;

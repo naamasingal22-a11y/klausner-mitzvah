@@ -695,7 +695,19 @@ main { display: block; outline: none; min-height: 60vh; }
 .tour-what { font-size: 1.1rem; line-height: 1.6; margin-bottom: 12px; }
 .tour-check { margin-top: 18px; }
 .opt--say { font-family: var(--font-text); font-size: 1.15rem; font-weight: 600; line-height: 1.5; }
-.tour-card #tourReveal:not(:empty) { margin-top: 12px; }
+.tour-card #tourAfter:not(:empty) { margin-top: 12px; }
+.tour-card [hidden] { display: none !important; }
+#tour { scroll-margin-top: 76px; } /* שהשורה "חלק X מתוך Y" לא תיכנס מתחת לכותרת הדביקה */
+.tour-title { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 10px; margin-bottom: 8px; }
+.tour-title .c-title { margin: 0; }
+.tour-sub { font-size: var(--fs-xs); font-weight: 800; color: var(--sky-deep); background: var(--sky-soft); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+.tour-go { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 16px; }
+.tour-tap { font-size: 1.45rem; line-height: 2.1; }
+.tour-marked { padding: 6px 10px 8px; background: var(--card); border-radius: 10px; border: 1.5px solid var(--line); }
+.tour-again { margin-top: 12px; }
+.tour-again summary { cursor: pointer; font-weight: 700; color: var(--sky-deep); }
+.tour-again[open] summary { margin-bottom: 8px; }
+.note .btn { margin-inline-start: 4px; vertical-align: middle; }
 @media (max-width: 640px) {
   .tour-card .options { grid-template-columns: 1fr; }
   .tour-what { font-size: 1.02rem; }
