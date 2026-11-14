@@ -148,9 +148,9 @@ window.KZ = window.KZ || {};
         let ok = false; try { ok = !!b.test(S, KZ); } catch (e) { ok = false; }
         if (ok) {
           S.badges[b.id] = Date.now();
-          S.awards['badge:' + b.id] = { pts: b.bonus ?? 10, label: 'תג: ' + b.name, at: Date.now() };
+          S.awards['badge:' + b.id] = { pts: b.bonus ?? 10, label: 'הישג: ' + b.name, at: Date.now() };
           save(); changed = true;
-          queueCelebration({ icon: b.icon, title: `תג חדש: ${b.name}`, text: `${b.desc} · ‎+${b.bonus ?? 10} בלוקים` });
+          queueCelebration({ icon: b.icon, title: `🏆 הישג חדש: ${b.name}`, text: `${b.desc} · ‎+${b.bonus ?? 10} בלוקים` });
         }
       }
     }

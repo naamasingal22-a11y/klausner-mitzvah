@@ -59,8 +59,8 @@
         <section class="section">${statsHTML()}</section>
 
         <section class="section">
-          <div class="section-head"><h2>התגים שלי</h2><span class="small muted">${badgesGot}/${KZ.badges.length}</span></div>
-          <div class="badges">${KZ.badges.map((b, i) => `<button class="badge ${S.badges[b.id] ? '' : 'badge--locked'}" data-act="badge-info" data-id="${b.id}"><div class="badge__icon" style="--r:${STICKER_ROT[i % STICKER_ROT.length]}deg;--sb:${STICKER_BG[i % STICKER_BG.length]}">${S.badges[b.id] ? b.icon : '🔒'}</div><b>${esc(b.name)}</b></button>`).join('')}</div>
+          <div class="section-head"><h2>ההישגים שלי</h2><span class="small muted">${badgesGot}/${KZ.badges.length}</span></div>
+          <div class="badges">${KZ.badges.map((b, i) => `<button class="badge ${S.badges[b.id] ? '' : 'badge--locked'}" data-act="badge-info" data-id="${b.id}"><div class="badge__icon" style="--r:${STICKER_ROT[i % STICKER_ROT.length]}deg;--sb:${STICKER_BG[i % STICKER_BG.length]}">${b.icon}</div><b>${esc(b.name)}</b></button>`).join('')}</div>
         </section>
 
         <section class="section" id="capsule">${capsuleHTML()}</section>
@@ -135,9 +135,9 @@
   KZ.actions['badge-info'] = (el) => {
     const b = KZ.badges.find((x) => x.id === el.dataset.id); if (!b) return;
     const got = S.badges[b.id];
-    KZ.modal(`<div class="celebrate"><div class="celebrate__icon" style="${got ? '' : 'filter:grayscale(1);opacity:.5'}">${got ? b.icon : '🔒'}</div>
+    KZ.modal(`<div class="celebrate"><div class="celebrate__icon" style="${got ? '' : 'filter:grayscale(1);opacity:.5'}">${b.icon}</div>
       <h2>${esc(b.name)}</h2><p>${esc(b.desc)}</p>
-      <p class="muted small">${got ? `✓ נפתח ב־${KZ.fmtDate(new Date(got))}` : `איך משיגים: ${esc(b.hint)}`}</p></div>`);
+      <p class="muted small">${got ? `🏆 הושג ב־${KZ.fmtDate(new Date(got))}` : `🔒 עוד נעול. איך משיגים: ${esc(b.hint)}`}</p></div>`);
   };
 
   KZ.actions['album-add'] = () => {
@@ -174,7 +174,7 @@
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   };
   KZ.actions.reset = () => {
-    KZ.modal(`<h2>להתחיל מחדש?</h2><p>כל הבלוקים, התגים, היומן והאלבום יימחקו מהמכשיר הזה. אם יש לכם קובץ גיבוי – אפשר יהיה לטעון אותו שוב.</p>
+    KZ.modal(`<h2>להתחיל מחדש?</h2><p>כל הבלוקים, ההישגים, היומן והאלבום יימחקו מהמכשיר הזה. אם יש לכם קובץ גיבוי – אפשר יהיה לטעון אותו שוב.</p>
       <div class="btn-row"><button class="btn" data-yes style="background:var(--pom-deep)">כן, למחוק הכול</button><button class="btn btn--ghost" data-act="close-modal">ביטול</button></div>`, {
       onMount(m) { KZ.$('[data-yes]', m).addEventListener('click', () => { KZ.resetAll(); KZ.closeModal(); KZ.updateChrome(); KZ.go('#/'); KZ.openProfile(true); }); },
     });

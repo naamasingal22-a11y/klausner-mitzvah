@@ -95,7 +95,7 @@
 
   function badgesBlock() {
     const got = KZ.badges.filter((b) => S.badges[b.id]).sort((a, b) => S.badges[b.id] - S.badges[a.id]);
-    if (!got.length) return `<p class="muted">עוד אין תגים – הראשון ממש קרוב. ${KZ.g('תתחיל', 'תתחילי', 'התחילו')} במשימה אחת!</p>`;
+    if (!got.length) return `<p class="muted">עוד אין הישגים – הראשון ממש קרוב. ${KZ.g('תתחיל', 'תתחילי', 'התחילו')} במשימה אחת!</p>`;
     return `<div class="badge-row">${got.slice(0, 8).map((b) => `<span class="badge-mini" title="${esc(b.name)}">${b.icon}</span>`).join('')}</div>`;
   }
 
@@ -153,7 +153,7 @@
 
       <section class="section grid-2">
         <div class="card">
-          <div class="section-head"><h3 style="margin:0">התגים שלי</h3><a class="small" href="#/me">לכל התגים</a></div>
+          <div class="section-head"><h3 style="margin:0">ההישגים שלי</h3><a class="small" href="#/me">לכל ההישגים</a></div>
           ${badgesBlock()}
         </div>
         <div class="card">

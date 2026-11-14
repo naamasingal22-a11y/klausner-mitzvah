@@ -1,5 +1,5 @@
 /* =========================================================
-   quests.js – ארבעת העולמות, הדרגות, המשימות והתגים
+   quests.js – ארבעת העולמות, הדרגות, המשימות וההישגים
    ========================================================= */
 
 /* ארבעת העולמות של המסע (המזהים – כמו באתר המקורי: identity, social, community, knowledge) */
@@ -130,7 +130,7 @@ KZ.quests = [
 ];
 
 /* =========================================================
-   תגים – נפתחים אוטומטית. test(S) מקבל את מצב המשתמש
+   הישגים (תגים) – נפתחים אוטומטית. test(S) מקבל את מצב המשתמש
    ========================================================= */
 (function () {
   const qDone = (S, pillar) => KZ.quests.filter((q) => S.quests[q.id] && (!pillar || q.pillar === pillar)).length;
@@ -140,34 +140,34 @@ KZ.quests = [
   const LIB = ['taamim', 'siddur', 'aliyah', 'parasha', 'reader', 'gabbai', 'glossary', 'dvar'];
 
   KZ.badges = [
-    { id: 'start', icon: '👣', name: 'צעד ראשון', desc: 'יצאת לדרך – הפרופיל מוכן.', hint: 'מלאו את הפרופיל', test: (S) => !!S.profile.name },
-    { id: 'roots', icon: '🌳', name: 'שורשים', desc: 'שלוש משימות במכרה הזהות.', hint: 'השלם 3 משימות במכרה הזהות', test: (S) => qDone(S, 'identity') >= 3 },
-    { id: 'friends', icon: '🤝', name: 'חברותא', desc: 'שלוש משימות במחנה החברים.', hint: 'השלם 3 משימות במחנה החברים', test: (S) => qDone(S, 'social') >= 3 },
-    { id: 'giving', icon: '🙌', name: 'ידיים טובות', desc: 'שלוש משימות בכפר הקהילה.', hint: 'השלם 3 משימות בכפר הקהילה', test: (S) => qDone(S, 'community') >= 3 },
-    { id: 'books', icon: '📚', name: 'תולעת ספרים', desc: 'שלוש משימות בספריית הידע.', hint: 'השלם 3 משימות בספריית הידע', test: (S) => qDone(S, 'knowledge') >= 3 },
+    { id: 'start', icon: '🧱', name: 'הבלוק הראשון', desc: 'יצאת לדרך – הפרופיל מוכן.', hint: 'מלא את הפרופיל', test: (S) => !!S.profile.name },
+    { id: 'roots', icon: '🌳', name: 'חופר שורשים', desc: 'שלוש משימות במכרה הזהות.', hint: 'השלם 3 משימות במכרה הזהות', test: (S) => qDone(S, 'identity') >= 3 },
+    { id: 'friends', icon: '🏕️', name: 'ראש המחנה', desc: 'שלוש משימות במחנה החברים.', hint: 'השלם 3 משימות במחנה החברים', test: (S) => qDone(S, 'social') >= 3 },
+    { id: 'giving', icon: '🏘️', name: 'בונה הכפר', desc: 'שלוש משימות בכפר הקהילה.', hint: 'השלם 3 משימות בכפר הקהילה', test: (S) => qDone(S, 'community') >= 3 },
+    { id: 'books', icon: '📚', name: 'שומר הספרייה', desc: 'שלוש משימות בספריית הידע.', hint: 'השלם 3 משימות בספריית הידע', test: (S) => qDone(S, 'knowledge') >= 3 },
     { id: 'four', icon: '🧭', name: 'ארבעה עולמות', desc: 'לפחות משימה אחת בכל אחד מארבעת העולמות.', hint: 'משימה אחת בכל עולם', test: (S) => ['identity', 'social', 'community', 'knowledge'].every((p) => qDone(S, p) >= 1) },
     { id: 'shul', icon: '🕍', name: 'שבת בבית הכנסת', desc: 'שלוש שבתות בבית הכנסת.', hint: '3 צ׳ק־אינים בתחנה "שבת בבית הכנסת"', test: (S) => ci(S, 'shul') >= 3 },
     { id: 'tefillin', icon: '🌅', name: 'תפילין ראשונות', desc: 'הנחת תפילין בפעם הראשונה.', hint: 'צ׳ק־אין בתחנת התפילין', test: (S) => ci(S, 'tefillin') >= 1 },
     { id: 'rehearsal', icon: '🎤', name: 'מוכן לבמה', desc: 'עברת חזרה גנרלית.', hint: 'צ׳ק־אין בתחנת החזרה הגנרלית', test: (S) => ci(S, 'rehearsal') >= 1 },
-    { id: 'traveler', icon: '🗺️', name: 'על המפה', desc: 'חמש תחנות במסע.', hint: '5 צ׳ק־אינים בתחנות שונות', test: (S) => Object.keys(S.checkins).filter((k) => S.checkins[k].length).length >= 5 },
-    { id: 'album', icon: '🖼️', name: 'אנשים בדרך', desc: 'חמישה אנשים באלבום.', hint: 'הוסיפו 5 אנשים לאלבום', test: (S) => S.album.length >= 5 },
-    { id: 'ear', icon: '🎵', name: 'אוזן לטעמים', desc: '8 בלוקים ומעלה ב"כורים טעמים".', hint: '8/10 ב"כורים טעמים"', test: (S) => best(S, 'taam') >= 8 || best(S, 'taam-adv') >= 8 },
-    { id: 'maestro', icon: '🎼', name: 'מאסטרו של טעמים', desc: '10 מתוך 10 ברמה המתקדמת.', hint: '10/10 ב"כורים במעמקים"', test: (S) => best(S, 'taam-adv') >= 10 },
-    { id: 'order', icon: '🧩', name: 'יודעים סדר', desc: 'בנית גשר שלם בלי טעות.', hint: 'כל הקטעים בלי טעות ב"בונים גשר"', test: (S) => !!(S.games.order && S.games.order.perfect) },
+    { id: 'traveler', icon: '🗺️', name: 'חוקר המפה', desc: 'חמש תחנות במסע.', hint: '5 צ׳ק־אינים בתחנות שונות', test: (S) => Object.keys(S.checkins).filter((k) => S.checkins[k].length).length >= 5 },
+    { id: 'album', icon: '🖼️', name: 'אנשים בדרך', desc: 'חמישה אנשים באלבום.', hint: 'הוסף 5 אנשים לאלבום', test: (S) => S.album.length >= 5 },
+    { id: 'ear', icon: '⛏️', name: 'כורה טעמים', desc: '8 בלוקים ומעלה ב"כורים טעמים".', hint: '8/10 ב"כורים טעמים"', test: (S) => best(S, 'taam') >= 8 || best(S, 'taam-adv') >= 8 },
+    { id: 'maestro', icon: '💎', name: 'כורה יהלומים', desc: '10 מתוך 10 ב"כורים במעמקים".', hint: '10/10 ב"כורים במעמקים"', test: (S) => best(S, 'taam-adv') >= 10 },
+    { id: 'order', icon: '🌉', name: 'בונה גשרים', desc: 'בנית גשר שלם בלי טעות.', hint: 'כל הקטעים בלי טעות ב"בונים גשר"', test: (S) => !!(S.games.order && S.games.order.perfect) },
     { id: 'chain', icon: '🏰', name: 'מגדל מושלם', desc: 'כל קומות המגדל בלי טעות.', hint: 'כל הקומות בלי טעות ב"בונים מגדל"', test: (S) => !!(S.games.chain && S.games.chain.perfect) },
-    { id: 'speed', icon: '⚡', name: 'ברק', desc: '15 ומעלה ב"מיון לתיבות" (טעות מוציאה פריט).', hint: '15 נקודות ומעלה במפסיק או משרת', test: (S) => best(S, 'speed') >= 15 },
+    { id: 'speed', icon: '📦', name: 'ממיין ברק', desc: '15 ומעלה ב"מיון לתיבות" (טעות מוציאה פריט).', hint: '15 ומעלה ב"מיון לתיבות"', test: (S) => best(S, 'speed') >= 15 },
     { id: 'words', icon: '🧰', name: 'ארגז מלא', desc: '9 כלים ומעלה ב"ארגז הכלים".', hint: '9/10 ב"ארגז הכלים"', test: (S) => best(S, 'words') >= 9 },
-    { id: 'capsule', icon: '⏳', name: 'קפסולת זמן', desc: 'חתמת מכתב לעצמך.', hint: 'חתמו מכתב בקפסולת הזמן', test: (S) => !!S.capsule.sealedAt },
-    { id: 'journal', icon: '✍️', name: 'כותבים את המסע', desc: 'חמש רשומות ביומן.', hint: 'כתבו 5 רשומות ביומן', test: (S) => S.journal.length >= 5 },
-    { id: 'parasha', icon: '🔎', name: 'מצאתי את הפרשה', desc: 'גילית מתי הבר מצווה ומה הפרשה.', hint: 'השתמשו במחשבון הפרשה', test: (S) => !!(S.bm && S.bm.parashaHe) },
-    { id: 'explorer', icon: '🗝️', name: 'מפתחות הארון', desc: 'ביקרת בכל חדרי ארון הספרים.', hint: 'בקרו בכל המאגרים', test: (S) => LIB.every((k) => S.visited[k]) },
-    { id: 'dvar', icon: '🗣️', name: 'דבר תורה בדרך', desc: 'מילאת את כל שלבי בונה דבר התורה.', hint: 'מלאו את כל השדות בבונה דבר התורה', test: (S) => ['verse', 'question', 'idea1', 'idea2', 'me'].every((k) => (S.dvar[k] || '').trim().length > 5) },
+    { id: 'capsule', icon: '⏳', name: 'קפסולת זמן', desc: 'חתמת מכתב לעצמך.', hint: 'חתום מכתב בקפסולת הזמן', test: (S) => !!S.capsule.sealedAt },
+    { id: 'journal', icon: '✍️', name: 'יומן המסע', desc: 'חמש רשומות ביומן.', hint: 'כתוב 5 רשומות ביומן', test: (S) => S.journal.length >= 5 },
+    { id: 'parasha', icon: '🔎', name: 'מצאתי את הפרשה', desc: 'גילית מתי הבר מצווה ומה הפרשה.', hint: 'השתמש במחשבון הפרשה', test: (S) => !!(S.bm && S.bm.parashaHe) },
+    { id: 'explorer', icon: '🗝️', name: 'מפתחות הארון', desc: 'ביקרת בכל חדרי ארון הספרים.', hint: 'בקר בכל חדרי ארון הספרים', test: (S) => LIB.every((k) => S.visited[k]) },
+    { id: 'dvar', icon: '🗣️', name: 'דבר תורה בדרך', desc: 'מילאת את כל שלבי בונה דבר התורה.', hint: 'מלא את כל השדות בבונה דבר התורה', test: (S) => ['verse', 'question', 'idea1', 'idea2', 'me'].every((k) => (S.dvar[k] || '').trim().length > 5) },
     { id: 'my-ear', icon: '🎯', name: 'הטעמים של הפרשה שלי', desc: '8 ומעלה בזיהוי טעמים מתוך הפסוקים שלך.', hint: '8/10 ב"זהו את הטעם" בתרגול מהפרשה', test: (S) => best(S, 'my-taam') >= 8 },
-    { id: 'breath', icon: '⏸️', name: 'יודעים איפה לנשום', desc: 'מצאת את כל האתנחתות בסיבוב אחד.', hint: 'ניקוד מלא ב"איפה עוצרים?"', test: (S) => !!(S.games['my-stop'] && S.games['my-stop'].perfect) },
-    { id: 'siddur-map', icon: '📖', name: 'יודעים את הדרך בסידור', desc: 'עברת צעד אחר צעד על כל לשוניות מפת הסידור.', hint: 'סיימו את כל הלשוניות במפת הסידור (צעד אחר צעד)', bonus: 20, test: (S) => !!(S.siddurTour && KZ.siddurTabIds && KZ.siddurTabIds().every((id) => S.siddurTour[id] && S.siddurTour[id].done)) },
-    { id: 'course', icon: '🎓', name: 'בוגרי קורס הטעמים', desc: 'סיימת את כל שיעורי "לומדים טעמים".', hint: 'עברו את כל 9 השיעורים בקורס', bonus: 30, test: (S) => !!(S.course && S.course.done && KZ.courseLessons && KZ.courseLessons.every((l) => S.course.done[l.id])) },
-    { id: 'ready', icon: '📜', name: 'מוכנים לעלייה', desc: 'קראת קטע שלם מהפרשה כמו בספר תורה.', hint: 'כל הפסוקים בקטע אחד – "כמו בספר תורה"', bonus: 20, test: (S) => !!(S.practice && S.practice.done && Object.keys(S.practice.done).length) },
-    { id: 'half', icon: '🌓', name: 'חצי רימון', desc: '307 בלוקים – חצי מהבנייה!', hint: 'אספו 307 בלוקים', bonus: 0, test: (S) => seedsOf(S) >= 307 },
-    { id: 'full', icon: '👑', name: 'מלאים מצוות כרימון', desc: '613 בלוקים!', hint: 'אספו 613 בלוקים', bonus: 0, test: (S) => seedsOf(S) >= 613 },
+    { id: 'breath', icon: '⏸️', name: 'יודע איפה לנשום', desc: 'מצאת את כל האתנחתות בסיבוב אחד.', hint: 'ניקוד מלא ב"איפה עוצרים?"', test: (S) => !!(S.games['my-stop'] && S.games['my-stop'].perfect) },
+    { id: 'siddur-map', icon: '📖', name: 'יודע את הדרך בסידור', desc: 'עברת צעד אחר צעד על כל לשוניות מפת הסידור.', hint: 'סיים את כל הלשוניות במפת הסידור (צעד אחר צעד)', bonus: 20, test: (S) => !!(S.siddurTour && KZ.siddurTabIds && KZ.siddurTabIds().every((id) => S.siddurTour[id] && S.siddurTour[id].done)) },
+    { id: 'course', icon: '🎓', name: 'בוגר קורס הטעמים', desc: 'סיימת את כל שיעורי "לומדים טעמים".', hint: 'עבור את כל 9 השיעורים בקורס', bonus: 30, test: (S) => !!(S.course && S.course.done && KZ.courseLessons && KZ.courseLessons.every((l) => S.course.done[l.id])) },
+    { id: 'ready', icon: '📜', name: 'מוכן לעלייה', desc: 'קראת קטע שלם מהפרשה כמו בספר תורה.', hint: 'כל הפסוקים בקטע אחד – "כמו בספר תורה"', bonus: 20, test: (S) => !!(S.practice && S.practice.done && Object.keys(S.practice.done).length) },
+    { id: 'half', icon: '🌓', name: 'חצי רימון', desc: '307 בלוקים – חצי מהבנייה!', hint: 'אסוף 307 בלוקים', bonus: 0, test: (S) => seedsOf(S) >= 307 },
+    { id: 'full', icon: '👑', name: 'מלא מצוות כרימון', desc: '613 בלוקים!', hint: 'אסוף 613 בלוקים', bonus: 0, test: (S) => seedsOf(S) >= 613 },
   ];
 })();

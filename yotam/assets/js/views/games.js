@@ -301,7 +301,7 @@
           <div class="game-stage"><div class="card" id="stage"></div></div>`;
       }
       return `<header class="page-head"><span class="overline">כורים, ממיינים ובונים</span><h1>משחקים</h1>
-          <p>משחקים קצרים על טעמים, תפילה ומושגים. כל משחק מוסיף בלוקים לרימון – עד ${DAILY} פעמים ביום בכל משחק. ויש תגים מיוחדים לשיאים!</p></header>
+          <p>משחקים קצרים על טעמים, תפילה ומושגים. כל משחק מוסיף בלוקים לרימון – עד ${DAILY} פעמים ביום בכל משחק. ויש הישגים מיוחדים לשיאים!</p></header>
         <a class="card card--link weekly practice-promo" href="#/library/practice">
           <span class="sticker" style="--r:-4deg">חדש! ⭐</span>
           <h2 style="margin:10px 0 4px">תרגול מהפרשה שלי</h2>

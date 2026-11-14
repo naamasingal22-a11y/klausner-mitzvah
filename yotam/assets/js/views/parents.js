@@ -30,7 +30,7 @@
       ${t(n, 'בלוקים מתוך 613', `${lv.icon} ${esc(lv.name)}`)}
       ${t(`${stDone}/${acts.length}`, 'תחנות במסע')}
       ${t(qDone, 'משימות שהושלמו')}
-      ${t(bDone, 'תגים')}
+      ${t(bDone, 'הישגים')}
     </div>`;
   }
 
@@ -108,7 +108,7 @@
 
   function badges() {
     const got = KZ.badges.filter((b) => S.badges[b.id]);
-    if (!got.length) return '<p class="muted">עוד אין תגים.</p>';
+    if (!got.length) return '<p class="muted">עוד אין הישגים.</p>';
     return `<div class="pd-badges">${got.map((b) => `<span class="pd-badge"><span class="badge-mini" aria-hidden="true">${b.icon}</span><span>${esc(b.name)}</span></span>`).join('')}</div>`;
   }
 
@@ -138,7 +138,7 @@
           ${pillars()}
         </section>
         <section class="section">
-          <div class="section-head"><h2>תגים</h2></div>
+          <div class="section-head"><h2>הישגים</h2></div>
           ${badges()}
         </section>
         <p class="note small">📱 ההתקדמות נשמרת רק במכשיר הזה. העמוד מראה את מה שנעשה במכשיר שבו הוא פתוח.</p>`;
