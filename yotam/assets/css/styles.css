@@ -1240,3 +1240,11 @@ h1, h2 { font-weight: 900; letter-spacing: 0; }
 
 /* זכויות יוצרים בתחתית */
 .site-footer .copyright { margin-top: 12px; padding-top: 10px; border-top: 1px solid currentColor; border-top-color: rgba(127, 127, 127, .35); font-size: .82rem; font-weight: 600; }
+
+/* הצעד הבא: כרטיס אחד לפי מפת המסע */
+.next-step .next-card { margin: 6px 0 10px; }
+.next-step .next-card h3 { margin: 0 0 4px; }
+.next-step .next-card p { margin: 0; }
+.next-step .next-card__emoji { transform: none; background: #fff; box-shadow: var(--bevel); }
+.next-step__lesson { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; background: #fff; border: 2px solid var(--line-2); padding: 8px 10px; margin: 0 0 12px; font-size: var(--fs-sm); }
+.next-step__lesson-text { flex: 1 1 100%; }

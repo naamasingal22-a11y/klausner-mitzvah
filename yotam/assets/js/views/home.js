@@ -30,44 +30,41 @@
     </a>`;
   }
 
-  // הצעד הבא בלמידה: השיעור הבא בקורס, ואחרי הקורס – התרגול מהפרשה שלי
-  function nextStepCard() {
+  // הצעד הבא – כרטיס אחד, לפי מפת המסע (התחנות הן אבני הדרך האישיות של יותם).
+  // כשהתחנה הבאה היא קורס הטעמים – מראים בתוכה את השיעור הבא.
+  function nextLessonHTML() {
     const L = KZ.courseLessons || [];
     const done = (S.course && S.course.done) || {};
     const i = L.findIndex((l) => !done[l.id]);
-    if (i >= 0) {
-      const l = L[i];
+    if (i < 0) return '';
+    const l = L[i];
+    return `<div class="next-step__lesson"><span class="next-step__lesson-text">${l.emoji} <b>השיעור הבא (${i + 1} מתוך ${L.length}):</b> ${esc(l.title)}</span>
+      <a class="btn btn--sm" href="#/library/course/${l.id}">${i === 0 ? 'להתחיל את השיעור' : 'להמשיך לשיעור'} ←</a></div>`;
+  }
+  function nextStepCard() {
+    const list = KZ.journeyList ? KZ.journeyList().filter((a) => !a.me) : [];
+    const k = list.findIndex((a) => !(S.checkins[a.id] || []).length);
+    if (k < 0) {
+      // כל התחנות מאחוריו – ממשיכים לתרגל את הפסוקים
       return `<div class="card next-step">
         <span class="overline">הצעד הבא שלך</span>
-        <h3>${l.emoji} שיעור ${i + 1} מתוך ${L.length}: ${esc(l.title)}</h3>
-        <p class="small">${esc(l.goal)}</p>
-        <div class="btn-row">
-          <a class="btn btn--sm" href="#/library/course/${l.id}">${i === 0 ? 'להתחיל' : 'להמשיך'} ←</a>
-          <a class="btn btn--ghost btn--sm" href="#/library/practice">⭐ הפרשה שלי</a>
-        </div>
+        <h3>⭐ עברת את כל התחנות! עכשיו – לתרגל את הפסוקים</h3>
+        <p class="small">ממשיכים לקרוא את הקטע שלך, עד שהוא יוצא "כמו בספר תורה".</p>
+        <div class="btn-row"><a class="btn btn--sm" href="#/library/practice">לתרגול ←</a><a class="btn btn--ghost btn--sm" href="#/library/reader">📜 קורא הפרשה</a></div>
       </div>`;
     }
+    const a = list[k];
     return `<div class="card next-step">
-      <span class="overline">הצעד הבא שלך</span>
-      <h3>⭐ מתרגלים את הפסוקים שלי</h3>
-      <p class="small">${KZ.g('סיימת', 'סיימת', 'סיימתם')} את הקורס! עכשיו מתרגלים את הקטע ש${KZ.g('תקרא', 'תקראי', 'תקראו')} בעלייה.</p>
+      <span class="overline">הצעד הבא שלך · תחנה ${k + 1} מתוך ${list.length}</span>
+      <div class="next-card"><div class="next-card__emoji" aria-hidden="true">${a.emoji}</div>
+        <div><h3>${esc(a.title)}</h3><p class="small">${esc(a.kid)}</p></div></div>
+      ${a.id === 'taamim' ? nextLessonHTML() : ''}
       <div class="btn-row">
-        <a class="btn btn--sm" href="#/library/practice">לתרגול ←</a>
-        <a class="btn btn--ghost btn--sm" href="#/library/reader">📜 קורא הפרשה</a>
+        ${a.link && a.id !== 'taamim' ? `<a class="btn btn--sm" href="${a.link.href}">${esc(a.link.label)} ←</a>` : ''}
+        <button class="btn btn--sm ${a.link && a.id !== 'taamim' ? 'btn--ghost' : ''}" data-act="open-station" data-id="${a.id}">✓ עברתי את התחנה</button>
+        <a class="btn btn--ghost btn--sm" href="#/journey">🗺️ למפת המסע</a>
       </div>
     </div>`;
-  }
-
-  function nextStationCard() {
-    const list = KZ.journeyList ? KZ.journeyList() : [];
-    const next = list.find((a) => !a.me && !a.future && !(S.checkins[a.id] || []).length);
-    if (!next) return `<div class="card"><span class="overline">התחנה הבאה</span><h3>עברת את כל התחנות! 🎉</h3></div>`;
-    return `<button class="card card--link station__card" data-act="open-station" data-id="${next.id}">
-      <span class="overline">התחנה הבאה במסע</span>
-      <div class="next-card"><div class="next-card__emoji">${next.emoji}</div>
-      <div><h3 style="margin:0 0 4px">${esc(next.title)}</h3>
-      <div class="muted small">${icon('calendar')} ${esc(next.date ? KZ.fmtDate(next.date) : next.when)}</div></div></div>
-    </button>`;
   }
 
   function weeklyCard() {
@@ -139,9 +136,8 @@
 
       <section class="section">${nextStepCard()}</section>
 
-      <section class="section grid-3">
+      <section class="section grid-2">
         ${countdownCard()}
-        ${nextStationCard()}
         <div class="card" id="parashaWeek">
           <span class="overline">פרשת השבוע</span>
           <div class="parasha-mini"><div class="parasha-mini__icon">${icon('scroll')}</div><div><span class="loading">טוען...</span></div></div>
