@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>העולם של יותם · בונים בר מצווה</title>
+  <meta name="description" content="העולם של יותם: בונים את הבר מצווה בלוק אחר בלוק – משימות, משחקים, טעמי המקרא, הסידור והפרשה.">
+  <meta name="theme-color" content="#5BA4E6">
+  <meta name="color-scheme" content="only light">
+  <link rel="icon" href="assets/img/block.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&family=Noto+Serif+Hebrew:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">דילוג לתוכן</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="#/" aria-label="העולם של יותם – לדף הבית">
+        <span class="logo" aria-hidden="true"><i class="logo__block"></i><b>יותם</b></span>
+        <span class="brand__text">
+          <strong>העולם של יותם</strong>
+          <small>בלוק אחר בלוק</small>
+        </span>
+      </a>
+      <nav class="topnav" id="topnav" aria-label="ניווט ראשי"></nav>
+      <div class="topbar__me">
+        <a class="seed-pill" href="#/me" id="seedPill" aria-label="הבלוקים שלי"></a>
+        <a class="avatar-btn" href="#/me" id="avatarBtn" aria-label="האזור האישי"></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="site-footer">
+    <div class="ground" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="footer-brand">
+        <span class="logo" aria-hidden="true"><i class="logo__block"></i><b>יותם</b></span>
+        <span class="tagline">העולם של יותם<br>בונים בר מצווה, בלוק אחר בלוק</span>
+      </div>
+      <p id="giftLine">מתנה ליותם, באהבה גדולה. 💚</p>
+      <p><a href="#/me">האזור האישי</a> · <a href="#/journey">המסע</a> · <a href="#/library">ארון הספרים</a></p>
+      <p class="small">ההתקדמות נשמרת רק במכשיר הזה. כדאי לגבות מדי פעם מהאזור האישי.</p>
+    </div>
+  </footer>
+
+  <nav class="tabbar" id="tabbar" aria-label="ניווט ראשי"></nav>
+
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/hebrew.js"></script>
+  <script src="assets/js/data/gift.js"></script>
+  <script src="assets/js/data/program.js"></script>
+  <script src="assets/js/data/quests.js"></script>
+  <script src="assets/js/data/taamim.js"></script>
+  <script src="assets/js/data/course.js"></script>
+  <script src="assets/js/data/siddur.js"></script>
+  <script src="assets/js/data/siddur-checks.js"></script>
+  <script src="assets/js/views/home.js"></script>
+  <script src="assets/js/views/journey.js"></script>
+  <script src="assets/js/views/quests.js"></script>
+  <script src="assets/js/views/library.js"></script>
+  <script src="assets/js/views/taamim.js"></script>
+  <script src="assets/js/views/parasha.js"></script>
+  <script src="assets/js/views/games.js"></script>
+  <script src="assets/js/views/practice.js"></script>
+  <script src="assets/js/views/course.js"></script>
+  <script src="assets/js/views/me.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

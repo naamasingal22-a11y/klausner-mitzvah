@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" shape-rendering="crispEdges">
+  <!-- בלוק פיקסלים מקורי: דשא למעלה, אדמה למטה -->
+  <rect width="16" height="16" fill="#8A5A34"/>
+  <rect width="16" height="5" fill="#5DAE3B"/>
+  <rect y="5" width="2" height="1" fill="#5DAE3B"/><rect x="5" y="5" width="3" height="2" fill="#5DAE3B"/><rect x="11" y="5" width="2" height="1" fill="#5DAE3B"/><rect x="14" y="5" width="2" height="2" fill="#5DAE3B"/>
+  <rect x="2" y="1" width="2" height="1" fill="#7FCB52"/><rect x="9" y="2" width="2" height="1" fill="#7FCB52"/><rect x="13" y="1" width="1" height="1" fill="#7FCB52"/>
+  <rect x="3" y="9" width="2" height="1" fill="#6E4527"/><rect x="10" y="8" width="1" height="2" fill="#6E4527"/><rect x="6" y="12" width="2" height="1" fill="#A97448"/><rect x="12" y="13" width="2" height="1" fill="#6E4527"/><rect x="1" y="13" width="1" height="1" fill="#A97448"/>
+</svg>

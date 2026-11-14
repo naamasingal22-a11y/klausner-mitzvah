@@ -1,0 +1,11 @@
+{
+  "name": "העולם של יותם · בונים בר מצווה",
+  "short_name": "העולם של יותם",
+  "lang": "he",
+  "dir": "rtl",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#9ED3F7",
+  "theme_color": "#5BA4E6",
+  "icons": [{ "src": "assets/img/block.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
