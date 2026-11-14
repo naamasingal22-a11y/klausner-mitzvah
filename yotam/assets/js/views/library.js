@@ -439,7 +439,7 @@
         <header class="page-head"><span class="overline">מאחורי הקלעים</span><h1>מדריך הגבאי/ת הצעיר/ה</h1><p>${esc(G.intro)}</p></header>
         <div class="grid-2">${G.phases.map((p) => `<div class="card"><h3>${p.e} ${esc(p.t)}</h3><ul class="practice">${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>
         <section class="section card weekly"><h3>שלושה סודות של גבאים טובים</h3><ul class="practice">${G.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm btn--ghost" data-act="open-quest" data-id="kn-gabbai">משימה: שאלו את הגבאי/ת</button></div></section>`;
+          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm btn--ghost" data-act="open-quest" data-id="kn-gabbai">משימה: שאלה לגבאי</button></div></section>`;
     },
   };
 
