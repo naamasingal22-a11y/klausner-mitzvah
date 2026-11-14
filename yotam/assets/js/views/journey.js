@@ -74,7 +74,7 @@
             <div><strong>${done} מתוך ${real} תחנות</strong><div class="bar bar--thin" style="width:200px;margin-top:6px"><span style="width:${real ? (done / real) * 100 : 0}%"></span></div></div>
             <div class="legend"><span><i class="l-done"></i>עברתי</span><span><i class="l-next"></i>הבאה</span><span><i class="l-me"></i>היום שלי</span></div>
           </div>
-          ${S.bm ? '' : `<p class="small muted" style="margin:10px 0 0">⭐ רוצים לראות על המפה את היום שלכם? <a href="#/library/parasha">חשבו את תאריך ה${KZ.g('בר מצווה', 'בת מצווה', 'בר מצווה')}</a>.</p>`}
+          ${S.bm ? '' : `<p class="small muted" style="margin:10px 0 0">⭐ רוצה לראות על המפה את היום הגדול? <a href="#/library/parasha">חשב את תאריך הבר מצווה</a>.</p>`}
         </div>
         <div class="journey"><svg class="journey__path" aria-hidden="true"></svg><div class="stations">${stations}</div></div>
         <p class="note">💡 ${esc(KZ.program.note)}</p>`;
