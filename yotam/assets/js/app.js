@@ -20,7 +20,7 @@
       </div>
       <div class="stack small">
         <div class="body-item"><span class="e">🗺️</span><div><b>מפת המסע</b> – תחנות בדרך לבר מצווה. בכל תחנה שעוברים מקבלים בלוקים.</div></div>
-        <div class="body-item"><span class="e">🎯</span><div><b>אתגרים</b> – זהות, חברים, קהילה, ידע ומסורת.</div></div>
+        <div class="body-item"><span class="e">🎯</span><div><b>משימות</b> – בארבעה עולמות: המכרה, המחנה, הכפר והספרייה.</div></div>
         <div class="body-item"><span class="e">🧱</span><div><b>רימון של 613 בלוקים</b> – כל מה שעושים בונה אותו, בלוק אחר בלוק.</div></div>
         <div class="body-item"><span class="e">📜</span><div><b>ארון הספרים</b> – טעמים, סידור, הפרשה שלך ומשחקים.</div></div>
       </div>

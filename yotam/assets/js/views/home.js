@@ -1,5 +1,5 @@
 /* =========================================================
-   home.js – דף הבית: הרימון, השלב, התחנה הבאה, אתגר השבוע ופרשת השבוע
+   home.js – דף הבית: הרימון, השלב, התחנה הבאה, משימת השבוע ופרשת השבוע
    ========================================================= */
 (function (KZ) {
   'use strict';
@@ -76,7 +76,7 @@
     const P = KZ.pillars[q.pillar];
     const done = !!S.awards['weekly:' + KZ.isoWeek()];
     return `<button class="card card--link weekly quest" data-act="open-quest" data-id="${q.id}">
-      <div class="quest__top"><span class="overline">⭐ אתגר השבוע ${done ? '· בוצע!' : ''}</span><span class="tag tag--seed">‎+${q.seeds} ועוד 10 בונוס</span></div>
+      <div class="quest__top"><span class="overline">⭐ משימת השבוע ${done ? '· הושלמה!' : ''}</span><span class="tag tag--seed">‎+${q.seeds} ועוד 10 בונוס</span></div>
       <h3>${esc(q.title)}</h3>
       <p>${esc(q.desc)}</p>
       <div>${KZ.pillarTag(q.pillar)}</div>
@@ -98,7 +98,7 @@
 
   function badgesBlock() {
     const got = KZ.badges.filter((b) => S.badges[b.id]).sort((a, b) => S.badges[b.id] - S.badges[a.id]);
-    if (!got.length) return `<p class="muted">עוד אין תגים – הראשון ממש קרוב. ${KZ.g('תתחיל', 'תתחילי', 'התחילו')} באתגר אחד!</p>`;
+    if (!got.length) return `<p class="muted">עוד אין תגים – הראשון ממש קרוב. ${KZ.g('תתחיל', 'תתחילי', 'התחילו')} במשימה אחת!</p>`;
     return `<div class="badge-row">${got.slice(0, 8).map((b) => `<span class="badge-mini" title="${esc(b.name)}">${b.icon}</span>`).join('')}</div>`;
   }
 
@@ -121,10 +121,10 @@
             </div>
             <div class="bar"><span style="width:${Math.round(lv.pct * 100)}%"></span></div>
             <div class="small muted" style="margin-top:6px">${lv.next ? `עוד <b>${lv.next.min - n}</b> בלוקים לשלב "${esc(lv.next.name)}" ${lv.next.icon}` : 'הרימון בנוי עד הסוף! איזה מסע 👑'}</div>
-            <p>כל תחנה, אתגר ומשחק מוסיפים בלוקים לרימון שלך – עד 613, כמו מספר המצוות.</p>
+            <p>כל תחנה, משימה ומשחק מוסיפים בלוקים לרימון שלך – עד 613, כמו מספר המצוות.</p>
           </div>
           <div class="btn-row">
-            <a class="btn btn--marker" href="#/quests">${icon('target')} לאתגרים</a>
+            <a class="btn btn--marker" href="#/quests">${icon('target')} למשימות</a>
             <a class="btn btn--ghost" href="#/journey">${icon('map')} למפת המסע</a>
           </div>
         </div>
@@ -151,7 +151,7 @@
       <section class="section">${weeklyCard()}</section>
 
       <section class="section">
-        <div class="section-head"><h2>ארבעת הצירים שלי</h2><a href="#/quests" class="small">לכל האתגרים</a></div>
+        <div class="section-head"><h2>ארבעת העולמות שלי</h2><a href="#/quests" class="small">לכל המשימות</a></div>
         ${pillarsBlock()}
       </section>
 
@@ -164,9 +164,9 @@
           <h3>יש לך דקה?</h3>
           <p class="muted small">משחק קצר = עוד בלוקים ברימון.</p>
           <div class="btn-row">
-            <a class="btn btn--tch btn--sm" href="#/games/taam">🎵 טעם־מטרה</a>
-            <a class="btn btn--teal btn--sm" href="#/games/speed">⚡ מפסיק או משרת</a>
-            <a class="btn btn--ghost btn--sm" href="#/games/order">🧩 סדר בתפילה</a>
+            <a class="btn btn--tch btn--sm" href="#/games/taam">⛏️ כורים טעמים</a>
+            <a class="btn btn--teal btn--sm" href="#/games/speed">📦 מיון לתיבות</a>
+            <a class="btn btn--ghost btn--sm" href="#/games/order">🌉 בונים גשר</a>
             <a class="btn btn--marker btn--sm" href="#/library/practice">⭐ תרגול מהפרשה שלי</a>
             <a class="btn btn--ghost btn--sm" href="#/library/course">🎓 לומדים טעמים</a>
           </div>

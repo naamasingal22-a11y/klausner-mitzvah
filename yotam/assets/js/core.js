@@ -300,7 +300,7 @@ window.KZ = window.KZ || {};
   const NAV = [
     { id: 'home', href: '#/', label: 'בית', icon: 'home' },
     { id: 'journey', href: '#/journey', label: 'המסע', icon: 'map' },
-    { id: 'quests', href: '#/quests', label: 'אתגרים', icon: 'target' },
+    { id: 'quests', href: '#/quests', label: 'משימות', icon: 'target' },
     { id: 'games', href: '#/games', label: 'משחקים', icon: 'game' },
     { id: 'library', href: '#/library', label: 'ארון הספרים', icon: 'book' },
   ];

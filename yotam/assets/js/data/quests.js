@@ -1,13 +1,13 @@
 /* =========================================================
-   quests.js – ארבעת הצירים, שלבי הרימון, אתגרים ותגים
+   quests.js – ארבעת העולמות, הדרגות, המשימות והתגים
    ========================================================= */
 
-/* ארבעת צירי המסע */
+/* ארבעת העולמות של המסע (המזהים – כמו באתר המקורי: identity, social, community, knowledge) */
 KZ.pillars = {
-  identity:  { name: 'זהות', title: 'מי אני', emoji: '🪞', color: 'identity', blurb: 'שורשים, שם, ערכים ושאלות גדולות – מי אני ומה חשוב לי.' },
-  social:    { name: 'חברה', title: 'אני והחבר׳ה', emoji: '🤝', color: 'social', blurb: 'להיות חבר טוב, לראות את מי שבצד, ולבנות קבוצה שכיף להיות בה.' },
-  community: { name: 'קהילה', title: 'אני והקהילה', emoji: '🏘️', color: 'community', blurb: 'נתינה, התנדבות ולקחת חלק פעיל בבית הכנסת ובשכונה.' },
-  knowledge: { name: 'ידע ומסורת', title: 'ארון הספרים', emoji: '📜', color: 'knowledge', blurb: 'טעמים, סידור, פרשה ודבר תורה – הכלים להרגיש בבית.' },
+  identity:  { name: 'מכרה הזהות', title: 'מי אני', emoji: '⛏️', color: 'identity', blurb: 'חופרים פנימה: שורשים, שם, ערכים ושאלות גדולות – מי אני ומה חשוב לי.' },
+  social:    { name: 'מחנה החברים', title: 'אני והחבר׳ה', emoji: '🏕️', color: 'social', blurb: 'בונים צוות: להיות חבר טוב, לראות את מי שבצד, ולבנות קבוצה שכיף להיות בה.' },
+  community: { name: 'כפר הקהילה', title: 'אני והקהילה', emoji: '🏘️', color: 'community', blurb: 'כל כפר נבנה מהאנשים שבו: נתינה, התנדבות ולקחת חלק בבית הכנסת ובשכונה.' },
+  knowledge: { name: 'ספריית הידע', title: 'ארון הספרים', emoji: '📚', color: 'knowledge', blurb: 'טעמים, סידור, פרשה ודבר תורה – הכלים להרגיש בבית בבית הכנסת.' },
 };
 
 /* הדרגות – לפי מספר הבלוקים. 613 = רימון שלם, כמו מספר המצוות */
@@ -22,7 +22,7 @@ KZ.levels = [
 ];
 
 /* =========================================================
-   אתגרים
+   משימות
    seeds – כמה בלוקים · prompt – שאלת רפלקציה ליומן
    repeat – אפשר לחזור עליו (עד X פעמים) · link – קישור לעזרה באתר
    ========================================================= */
@@ -141,22 +141,22 @@ KZ.quests = [
 
   KZ.badges = [
     { id: 'start', icon: '👣', name: 'צעד ראשון', desc: 'יצאת לדרך – הפרופיל מוכן.', hint: 'מלאו את הפרופיל', test: (S) => !!S.profile.name },
-    { id: 'roots', icon: '🌳', name: 'שורשים', desc: 'שלושה אתגרי זהות.', hint: 'השלימו 3 אתגרים בציר "זהות"', test: (S) => qDone(S, 'identity') >= 3 },
-    { id: 'friends', icon: '🤝', name: 'חברותא', desc: 'שלושה אתגרי חברה.', hint: 'השלימו 3 אתגרים בציר "חברה"', test: (S) => qDone(S, 'social') >= 3 },
-    { id: 'giving', icon: '🙌', name: 'ידיים טובות', desc: 'שלושה אתגרי קהילה ונתינה.', hint: 'השלימו 3 אתגרים בציר "קהילה"', test: (S) => qDone(S, 'community') >= 3 },
-    { id: 'books', icon: '📚', name: 'תולעת ספרים', desc: 'שלושה אתגרי ידע ומסורת.', hint: 'השלימו 3 אתגרים בציר "ידע ומסורת"', test: (S) => qDone(S, 'knowledge') >= 3 },
-    { id: 'four', icon: '🧭', name: 'ארבע כנפות', desc: 'לפחות אתגר אחד בכל אחד מארבעת הצירים.', hint: 'אתגר אחד בכל ציר', test: (S) => ['identity', 'social', 'community', 'knowledge'].every((p) => qDone(S, p) >= 1) },
+    { id: 'roots', icon: '🌳', name: 'שורשים', desc: 'שלוש משימות במכרה הזהות.', hint: 'השלם 3 משימות במכרה הזהות', test: (S) => qDone(S, 'identity') >= 3 },
+    { id: 'friends', icon: '🤝', name: 'חברותא', desc: 'שלוש משימות במחנה החברים.', hint: 'השלם 3 משימות במחנה החברים', test: (S) => qDone(S, 'social') >= 3 },
+    { id: 'giving', icon: '🙌', name: 'ידיים טובות', desc: 'שלוש משימות בכפר הקהילה.', hint: 'השלם 3 משימות בכפר הקהילה', test: (S) => qDone(S, 'community') >= 3 },
+    { id: 'books', icon: '📚', name: 'תולעת ספרים', desc: 'שלוש משימות בספריית הידע.', hint: 'השלם 3 משימות בספריית הידע', test: (S) => qDone(S, 'knowledge') >= 3 },
+    { id: 'four', icon: '🧭', name: 'ארבעה עולמות', desc: 'לפחות משימה אחת בכל אחד מארבעת העולמות.', hint: 'משימה אחת בכל עולם', test: (S) => ['identity', 'social', 'community', 'knowledge'].every((p) => qDone(S, p) >= 1) },
     { id: 'shul', icon: '🕍', name: 'שבת בבית הכנסת', desc: 'שלוש שבתות בבית הכנסת.', hint: '3 צ׳ק־אינים בתחנה "שבת בבית הכנסת"', test: (S) => ci(S, 'shul') >= 3 },
     { id: 'tefillin', icon: '🌅', name: 'תפילין ראשונות', desc: 'הנחת תפילין בפעם הראשונה.', hint: 'צ׳ק־אין בתחנת התפילין', test: (S) => ci(S, 'tefillin') >= 1 },
     { id: 'rehearsal', icon: '🎤', name: 'מוכן לבמה', desc: 'עברת חזרה גנרלית.', hint: 'צ׳ק־אין בתחנת החזרה הגנרלית', test: (S) => ci(S, 'rehearsal') >= 1 },
     { id: 'traveler', icon: '🗺️', name: 'על המפה', desc: 'חמש תחנות במסע.', hint: '5 צ׳ק־אינים בתחנות שונות', test: (S) => Object.keys(S.checkins).filter((k) => S.checkins[k].length).length >= 5 },
     { id: 'album', icon: '🖼️', name: 'אנשים בדרך', desc: 'חמישה אנשים באלבום.', hint: 'הוסיפו 5 אנשים לאלבום', test: (S) => S.album.length >= 5 },
-    { id: 'ear', icon: '🎵', name: 'אוזן לטעמים', desc: '8 ומעלה במשחק "טעם־מטרה".', hint: 'קבלו 8/10 בטעם־מטרה', test: (S) => best(S, 'taam') >= 8 || best(S, 'taam-adv') >= 8 },
-    { id: 'maestro', icon: '🎼', name: 'מאסטרו של טעמים', desc: '10 מתוך 10 ברמה המתקדמת.', hint: '10/10 בטעם־מטרה מתקדם', test: (S) => best(S, 'taam-adv') >= 10 },
-    { id: 'order', icon: '🧩', name: 'יודעים סדר', desc: 'סידרת תפילה שלמה בלי טעות.', hint: 'ניקוד מלא בסדר בתפילה', test: (S) => !!(S.games.order && S.games.order.perfect) },
-    { id: 'chain', icon: '⛓️', name: 'שרשרת זהב', desc: 'כל משפחות הטעמים בסדר הנכון.', hint: 'ניקוד מלא בשרשרת טעמים', test: (S) => !!(S.games.chain && S.games.chain.perfect) },
-    { id: 'speed', icon: '⚡', name: 'ברק', desc: '15 נקודות במפסיק־או־משרת (טעות מורידה נקודה).', hint: '15 נקודות ומעלה במפסיק או משרת', test: (S) => best(S, 'speed') >= 15 },
-    { id: 'words', icon: '🔤', name: 'מילון מהלך', desc: '9 ומעלה בחידון המושגים.', hint: '9/10 בחידון המושגים', test: (S) => best(S, 'words') >= 9 },
+    { id: 'ear', icon: '🎵', name: 'אוזן לטעמים', desc: '8 בלוקים ומעלה ב"כורים טעמים".', hint: '8/10 ב"כורים טעמים"', test: (S) => best(S, 'taam') >= 8 || best(S, 'taam-adv') >= 8 },
+    { id: 'maestro', icon: '🎼', name: 'מאסטרו של טעמים', desc: '10 מתוך 10 ברמה המתקדמת.', hint: '10/10 ב"כורים במעמקים"', test: (S) => best(S, 'taam-adv') >= 10 },
+    { id: 'order', icon: '🧩', name: 'יודעים סדר', desc: 'בנית גשר שלם בלי טעות.', hint: 'כל הקטעים בלי טעות ב"בונים גשר"', test: (S) => !!(S.games.order && S.games.order.perfect) },
+    { id: 'chain', icon: '🏰', name: 'מגדל מושלם', desc: 'כל קומות המגדל בלי טעות.', hint: 'כל הקומות בלי טעות ב"בונים מגדל"', test: (S) => !!(S.games.chain && S.games.chain.perfect) },
+    { id: 'speed', icon: '⚡', name: 'ברק', desc: '15 ומעלה ב"מיון לתיבות" (טעות מוציאה פריט).', hint: '15 נקודות ומעלה במפסיק או משרת', test: (S) => best(S, 'speed') >= 15 },
+    { id: 'words', icon: '🧰', name: 'ארגז מלא', desc: '9 כלים ומעלה ב"ארגז הכלים".', hint: '9/10 ב"ארגז הכלים"', test: (S) => best(S, 'words') >= 9 },
     { id: 'capsule', icon: '⏳', name: 'קפסולת זמן', desc: 'חתמת מכתב לעצמך.', hint: 'חתמו מכתב בקפסולת הזמן', test: (S) => !!S.capsule.sealedAt },
     { id: 'journal', icon: '✍️', name: 'כותבים את המסע', desc: 'חמש רשומות ביומן.', hint: 'כתבו 5 רשומות ביומן', test: (S) => S.journal.length >= 5 },
     { id: 'parasha', icon: '🔎', name: 'מצאתי את הפרשה', desc: 'גילית מתי הבר מצווה ומה הפרשה.', hint: 'השתמשו במחשבון הפרשה', test: (S) => !!(S.bm && S.bm.parashaHe) },

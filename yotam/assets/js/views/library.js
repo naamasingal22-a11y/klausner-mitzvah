@@ -207,7 +207,7 @@
         ${siddurMode === 'tour' ? '<div id="tour"></div>' : mapHTML(siddurTab)}
         <section class="section card weekly">
           <h3>🧩 עוד בדיקה: מה בא קודם?</h3>
-          <p class="muted">במשחק "סדר בתפילה" מסדרים את חלקי התפילה – ומקבלים בלוקים.</p>
+          <p class="muted">במשחק "בונים גשר" מסדרים את חלקי התפילה כמו קרשים – ומקבלים בלוקים.</p>
           <a class="btn btn--teal" href="#/games/order">למשחק</a>
         </section>`;
     },
@@ -427,7 +427,7 @@
         <section class="section"><div class="section-head"><h2>מי עושה מה ליד הבימה?</h2></div>
           <div class="grid-3">${A.roles.map((r) => `<div class="card card--flat body-item"><span class="e">${r.e}</span><div><strong>${esc(r.t)}</strong><div class="muted small">${esc(r.d)}</div></div></div>`).join('')}</div></section>
         <section class="section card weekly"><h3>טיפים של ותיקים</h3><ul class="practice">${A.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm" data-act="open-quest" data-id="kn-brachot">אתגר: ברכות התורה בעל פה</button></div></section>`;
+          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm" data-act="open-quest" data-id="kn-brachot">משימה: ברכות התורה בעל פה</button></div></section>`;
     },
   };
 
@@ -439,7 +439,7 @@
         <header class="page-head"><span class="overline">מאחורי הקלעים</span><h1>מדריך הגבאי/ת הצעיר/ה</h1><p>${esc(G.intro)}</p></header>
         <div class="grid-2">${G.phases.map((p) => `<div class="card"><h3>${p.e} ${esc(p.t)}</h3><ul class="practice">${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>
         <section class="section card weekly"><h3>שלושה סודות של גבאים טובים</h3><ul class="practice">${G.tips.map((t) => `<li>${esc(t)}</li>`).join('')}</ul>
-          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm btn--ghost" data-act="open-quest" data-id="kn-gabbai">אתגר: שאלו את הגבאי/ת</button></div></section>`;
+          <div class="btn-row" style="margin-top:10px"><button class="btn btn--sm btn--ghost" data-act="open-quest" data-id="kn-gabbai">משימה: שאלו את הגבאי/ת</button></div></section>`;
     },
   };
 
@@ -447,10 +447,10 @@
   KZ.libSections.glossary = {
     render() {
       return `${crumbs('מילון מושגים')}
-        <header class="page-head"><h1>מילון מושגים</h1><p>${KZ.glossary.length} מילים שכדאי להכיר. אחר כך – נסו את חידון המושגים!</p></header>
+        <header class="page-head"><h1>מילון מושגים</h1><p>${KZ.glossary.length} מילים שכדאי להכיר. אחר כך – מלא איתן את ארגז הכלים!</p></header>
         <div class="search" style="margin-bottom:14px">${icon('search')}<input class="input" id="glossSearch" type="search" placeholder="חיפוש מושג..." aria-label="חיפוש מושג"></div>
         <dl class="card" id="glossList" style="padding:4px 0">${KZ.glossary.map((g) => `<div class="gloss-item" data-k="${esc(g.t + ' ' + g.d)}"><dt>${esc(g.t)}</dt><dd>${esc(g.d)}</dd></div>`).join('')}</dl>
-        <p class="center" style="margin-top:16px"><a class="btn btn--tch" href="#/games/words">🔤 לחידון המושגים</a></p>`;
+        <p class="center" style="margin-top:16px"><a class="btn btn--tch" href="#/games/words">🧰 למשחק ארגז הכלים</a></p>`;
     },
     mount(root) {
       const inp = KZ.$('#glossSearch', root);

@@ -184,7 +184,7 @@
 
         <section class="section card weekly">
           <h3>🎮 מוכנים לבדוק את עצמכם?</h3>
-          <div class="btn-row"><a class="btn btn--tch" href="#/games/taam">🎵 טעם־מטרה</a><a class="btn btn--teal" href="#/games/speed">⚡ מפסיק או משרת</a><a class="btn btn--ghost" href="#/games/chain">⛓️ שרשרת טעמים</a></div>
+          <div class="btn-row"><a class="btn btn--tch" href="#/games/taam">⛏️ כורים טעמים</a><a class="btn btn--teal" href="#/games/speed">📦 מיון לתיבות</a><a class="btn btn--ghost" href="#/games/chain">🏰 בונים מגדל</a></div>
         </section>`;
     },
     mount(root) {

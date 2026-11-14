@@ -1209,3 +1209,34 @@ h1, h2 { font-weight: 900; letter-spacing: 0; }
 .pd-badge .badge-mini { width: 40px; height: 40px; font-size: 20px; }
 .pd-link { display: flex; gap: 14px; align-items: center; }
 .pd-link__e { font-size: 30px; line-height: 1; }
+
+/* ---------- משחקים בעולם הבלוקים ---------- */
+.game-card__art { border: 3px solid var(--edge); box-shadow: var(--bevel); }
+/* שורת בלוקים: נכרה / נסדק / הבא בתור */
+.blk-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin: 8px 0 4px; }
+.blk { width: 24px; height: 24px; background: var(--stone); border: 2px solid var(--edge); box-shadow: var(--bevel); transition: transform .15s; }
+.blk--cur { background: #B4B8AE; outline: 3px solid var(--marker); outline-offset: 1px; }
+.blk--ok { background: linear-gradient(var(--grass) 0 36%, var(--dirt) 36%); animation: blkPop .3s steps(3, end); }
+.blk--bad { background: linear-gradient(135deg, transparent 44%, var(--edge) 44% 52%, transparent 52%), linear-gradient(45deg, transparent 58%, var(--edge) 58% 64%, transparent 64%), var(--stone); opacity: .7; }
+@keyframes blkPop { 50% { transform: scale(1.25); } }
+/* מגדל: קומה לכל סיבוב */
+.tower { display: flex; flex-direction: column-reverse; align-items: center; gap: 2px; margin: 6px auto 10px; }
+.tw { display: block; width: 110px; height: 16px; border: 2px dashed var(--line-2); }
+.tw--cur { border: 2px solid var(--marker); background: var(--marker-soft); }
+.tw--ok { border: 2px solid var(--edge); box-shadow: var(--bevel); background: repeating-linear-gradient(90deg, #9DA197 0 16px, #7C8077 16px 18px); }
+.tw--fix { border: 2px solid var(--edge); box-shadow: var(--bevel); background: repeating-linear-gradient(90deg, #C29660 0 22px, #A47A47 22px 24px); }
+/* גשר: קרש לכל סיבוב */
+.bridge { display: flex; justify-content: center; gap: 3px; margin: 6px 0 10px; }
+.br { display: block; flex: 0 1 56px; height: 18px; border: 2px dashed var(--line-2); }
+.br--cur { border: 2px solid var(--marker); background: var(--marker-soft); }
+.br--ok { border: 2px solid var(--edge); box-shadow: var(--bevel); background: repeating-linear-gradient(90deg, #9DA197 0 12px, #7C8077 12px 14px); }
+.br--fix { border: 2px solid var(--edge); box-shadow: var(--bevel); background: repeating-linear-gradient(90deg, #C29660 0 12px, #A47A47 12px 14px); }
+/* מיון לתיבות */
+.speed-btns .opt.chest { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: #D9AE73; color: var(--edge); }
+.speed-btns .opt.chest small { font-size: .8rem; font-weight: 700; color: #4A3418; }
+.speed-btns .opt.chest.right { background: #BFE3A9; }
+.speed-btns .opt.chest.wrong { background: var(--pom-soft); }
+@media (prefers-reduced-motion: reduce) { .blk--ok { animation: none; } }
+
+/* זכויות יוצרים בתחתית */
+.site-footer .copyright { margin-top: 12px; padding-top: 10px; border-top: 1px solid currentColor; border-top-color: rgba(127, 127, 127, .35); font-size: .82rem; font-weight: 600; }

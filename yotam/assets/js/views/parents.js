@@ -29,7 +29,7 @@
     return `<div class="pd-tiles">
       ${t(n, 'בלוקים מתוך 613', `${lv.icon} ${esc(lv.name)}`)}
       ${t(`${stDone}/${acts.length}`, 'תחנות במסע')}
-      ${t(qDone, 'אתגרים שהושלמו')}
+      ${t(qDone, 'משימות שהושלמו')}
       ${t(bDone, 'תגים')}
     </div>`;
   }
@@ -134,7 +134,7 @@
           ${learning()}
         </section>
         <section class="section">
-          <div class="section-head"><h2>אתגרים</h2><a class="small" href="#/quests">לכל האתגרים</a></div>
+          <div class="section-head"><h2>משימות בארבעת העולמות</h2><a class="small" href="#/quests">לכל המשימות</a></div>
           ${pillars()}
         </section>
         <section class="section">

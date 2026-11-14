@@ -980,3 +980,6 @@ th { background: var(--sky-deep); }
 .mv-key { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--fs-xs); color: var(--ink-2); margin-top: 2px; }
 .mv-key b { display: inline-block; min-width: 1.6em; text-align: center; padding: 0 4px; margin-left: 3px; background: #fff; border: 1px solid var(--line-2); border-radius: 999px; color: var(--ink); }
 .words__line--all .mv__u--on .mv__w { color: var(--sky-ink); }
+
+/* זכויות יוצרים בתחתית */
+.site-footer .copyright { margin-top: 12px; padding-top: 10px; border-top: 1px solid currentColor; border-top-color: rgba(127, 127, 127, .35); font-size: .82rem; font-weight: 600; }

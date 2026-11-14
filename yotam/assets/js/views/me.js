@@ -17,7 +17,7 @@
     return `<div class="stat-row">
       <div class="stat"><b>${n}</b><span>בלוקים</span></div>
       <div class="stat"><b>${lv.icon}</b><span>${esc(lv.name)}</span></div>
-      <div class="stat"><b>${KZ.quests.filter((q) => S.quests[q.id]).length}</b><span>אתגרים</span></div>
+      <div class="stat"><b>${KZ.quests.filter((q) => S.quests[q.id]).length}</b><span>משימות</span></div>
       <div class="stat"><b>${ci}</b><span>תחנות במסע</span></div>
     </div>`;
   }
@@ -78,7 +78,7 @@
             <label class="field"><span>${esc(prompt)}</span><textarea class="textarea" name="text" required maxlength="2000"></textarea></label>
             <button class="btn btn--sm" type="submit">${icon('pen')} הוספה ליומן</button>
           </form>
-          ${S.journal.length ? S.journal.map((j) => `<div class="journal-entry"><div class="when">${KZ.fmtDate(new Date(j.at))}</div><h4>${esc(j.title)}</h4><p>${esc(j.text)}</p></div>`).join('') : '<p class="muted">כאן יופיעו כל המחשבות שכתבתם באתגרים ובתחנות.</p>'}
+          ${S.journal.length ? S.journal.map((j) => `<div class="journal-entry"><div class="when">${KZ.fmtDate(new Date(j.at))}</div><h4>${esc(j.title)}</h4><p>${esc(j.text)}</p></div>`).join('') : '<p class="muted">כאן יופיעו כל המחשבות שכתבת במשימות ובתחנות.</p>'}
         </section>
 
         <a class="section card card--link pd-link" href="#/parents"><span class="pd-link__e" aria-hidden="true">👪</span><div><h3 style="margin:0">להורים</h3><p class="muted small" style="margin:2px 0 0">תמונת מצב של המסע, ואיך אפשר לעזור בכל תחנה. בלי היומן – הוא נשאר שלך.</p></div></a>
