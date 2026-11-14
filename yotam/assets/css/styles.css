@@ -1178,3 +1178,34 @@ h1, h2 { font-weight: 900; letter-spacing: 0; }
 
 /* קישור הדילוג – מוסתר לגמרי עד שמגיעים אליו במקלדת */
 .skip-link { top: -80px; }
+
+/* ---------- עמוד ההורים ---------- */
+.pd-privacy { margin-bottom: 4px; }
+.pd-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 760px) { .pd-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.pd-tile { display: flex; flex-direction: column; gap: 2px; padding: 14px; }
+.pd-tile__num { font-weight: 900; font-size: 1.9rem; line-height: 1.1; color: var(--teal-deep); font-variant-numeric: tabular-nums; text-shadow: 2px 2px 0 var(--marker); }
+.pd-tile__label { font-weight: 700; font-size: var(--fs-sm); }
+.pd-tile__sub { font-size: var(--fs-xs); color: var(--ink-2); font-weight: 700; }
+.pd-day { display: flex; flex-direction: column; gap: 4px; }
+.pd-stations { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.pd-station { display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 12px; align-items: start; background: var(--card); border: 2px solid var(--line-2); padding: 12px; }
+.pd-station.is-done { border-color: var(--ok); }
+.pd-station.is-next { border: 3px solid var(--edge); background: var(--marker-soft); }
+.pd-station__e { width: 46px; height: 46px; display: grid; place-items: center; font-size: 24px; background: #fff; border: 2px solid var(--edge); box-shadow: var(--bevel); }
+.pd-station.is-done .pd-station__e { background: linear-gradient(var(--grass) 0 34%, var(--dirt) 34%); }
+.pd-station__top { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; justify-content: space-between; }
+.pd-help { margin: 6px 0 0; font-size: var(--fs-sm); color: var(--ink-2); }
+.pd-help b { color: var(--teal-deep); }
+.pd-learning { display: grid; gap: 14px; }
+.pd-learn { display: grid; gap: 4px; }
+.pd-learn__top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.pd-chips { gap: 6px; margin-top: -6px; }
+.pd-pillars { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (min-width: 760px) { .pd-pillars { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.pd-qlist { margin: 6px 0 0; padding-inline-start: 18px; font-size: var(--fs-xs); color: var(--ink); }
+.pd-badges { display: flex; flex-wrap: wrap; gap: 10px 14px; }
+.pd-badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: var(--fs-sm); }
+.pd-badge .badge-mini { width: 40px; height: 40px; font-size: 20px; }
+.pd-link { display: flex; gap: 14px; align-items: center; }
+.pd-link__e { font-size: 30px; line-height: 1; }

@@ -81,6 +81,7 @@
           ${S.journal.length ? S.journal.map((j) => `<div class="journal-entry"><div class="when">${KZ.fmtDate(new Date(j.at))}</div><h4>${esc(j.title)}</h4><p>${esc(j.text)}</p></div>`).join('') : '<p class="muted">כאן יופיעו כל המחשבות שכתבתם באתגרים ובתחנות.</p>'}
         </section>
 
+        <a class="section card card--link pd-link" href="#/parents"><span class="pd-link__e" aria-hidden="true">👪</span><div><h3 style="margin:0">להורים</h3><p class="muted small" style="margin:2px 0 0">תמונת מצב של המסע, ואיך אפשר לעזור בכל תחנה. בלי היומן – הוא נשאר שלך.</p></div></a>
         <section class="section card card--flat">
           <h3>${icon('download')} גיבוי ושחזור</h3>
           <p class="small muted">כל ההתקדמות נשמרת רק בדפדפן הזה. כדאי לשמור קובץ גיבוי מדי פעם – ואפשר לטעון אותו במכשיר אחר.</p>
